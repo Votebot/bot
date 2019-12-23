@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "space.votebot.shardmanager.api";
+
+package space.votebot.shardmanager.api;
+
+message ConnectionRequest {}
+
+message ServiceConnectionInfo {
+    int32 id = 1;
+    string token = 2;
+}
+
+message ShardConnectionInfo {
+    repeated int32 shard_id = 1;
+    int32 shard_count = 2;
+}
+
+message StatusUpdate {
+    enum Type {
+        IDLE = 0;
+        REQUEST_SHARD_CONNECTION_INFO = 1;
+        RELEASE_SHARDS = 2;
+    }
+    Type type = 1;
+}
+
+service ShardManager {
+    rpc RequestConnectionInfo (ConnectionRequest) returns (ServiceConnectionInfo) {}
+    rpc Connect (ServiceConnectionInfo) returns (stream StatusUpdate) {}
+    rpc RequestShardConnectionInfo (ServiceConnectionInfo) returns (ShardConnectionInfo) {}
+}
