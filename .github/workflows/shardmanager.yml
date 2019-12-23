@@ -31,7 +31,7 @@ jobs:
           docker tag ${IMAGE} ${IMAGE}:${GITHUB_SHA::8}
           docker push ${IMAGE}
       - name: Build Image Master
-        if: github.ref == master
+        if: github.ref == "master"
         env:
           IMAGE: votebot/shardmanager
           DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
