@@ -19,6 +19,6 @@ jobs:
       - name: Build with Gradle
         run: |
           chmod +x ./gradlew
-          ./gradlew :shardManager:clean build
-          ./gradlew :shardManagerAPI:clean build
-          ./gradlew :shard:clean build
+          ./gradlew :shardManager:clean :shardManager:build
+          ./gradlew :shardManagerAPI:clean :shardManagerAPI:build
+          ./gradlew :shard:clean :shard:build

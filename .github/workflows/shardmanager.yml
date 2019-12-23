@@ -19,7 +19,7 @@ jobs:
       - name: Build with Gradle
         run: |
           chmod +x ./gradlew
-          ./gradlew :shardManager:clean build
+          ./gradlew :shardManager:clean :shardManager:build
       - name: Build Image
         env:
           IMAGE: votebot/shardmanager
@@ -27,7 +27,18 @@ jobs:
           DOCKER_PASSWD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWD
-          docker build -t ${IMAGE} . -f Dockerfile
+          docker build -t ${IMAGE} . -f shardManager/Dockerfile
+          docker tag ${IMAGE} ${IMAGE}:${GITHUB_SHA::8}
+          docker push ${IMAGE}
+      - name: Build Image Master
+        if: github.ref == 'refs/heads/master'
+        env:
+          IMAGE: votebot/shardmanager
+          DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWD
+          docker build -t ${IMAGE} . -f shardManager/Dockerfile
           docker tag ${IMAGE} ${IMAGE}:latest
           docker tag ${IMAGE} ${IMAGE}:${GITHUB_SHA::8}
           docker push ${IMAGE}
