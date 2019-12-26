@@ -5,7 +5,8 @@ option java_package = "space.votebot.shardmanager.api";
 
 package space.votebot.shardmanager.api;
 
-message ConnectionRequest {}
+message ConnectionRequest {
+}
 
 message ServiceConnectionInfo {
     int32 id = 1;
@@ -27,7 +28,10 @@ message StatusUpdate {
 }
 
 service ShardManager {
-    rpc RequestConnectionInfo (ConnectionRequest) returns (ServiceConnectionInfo) {}
-    rpc Connect (ServiceConnectionInfo) returns (stream StatusUpdate) {}
-    rpc RequestShardConnectionInfo (ServiceConnectionInfo) returns (ShardConnectionInfo) {}
+    rpc RequestConnectionInfo (ConnectionRequest) returns (ServiceConnectionInfo) {
+    }
+    rpc Connect (ServiceConnectionInfo) returns (stream StatusUpdate) {
+    }
+    rpc RequestShardConnectionInfo (ServiceConnectionInfo) returns (ShardConnectionInfo) {
+    }
 }
