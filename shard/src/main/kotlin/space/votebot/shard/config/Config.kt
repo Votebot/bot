@@ -30,6 +30,6 @@ class Config {
     fun consulPort() = Integer.parseInt(dotenv["${PREFIX}CONSUL_PORT"] ?: "8500")
 
     companion object {
-        const val PREFIX = "SHARDMANAGER_"
+        const val PREFIX = "SHARD_"
     }
 }
