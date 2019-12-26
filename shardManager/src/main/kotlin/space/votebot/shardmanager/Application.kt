@@ -18,12 +18,14 @@
 
 package space.votebot.shardmanager
 
+import io.sentry.Sentry
 import space.votebot.common.ConsulRegistry
 import space.votebot.shardmanager.api.ShardManagerAPI
 import space.votebot.shardmanager.config.Config
 
 fun main() {
     val config = Config()
+    Sentry.init(config.sentryDsn())
     val serviceRegistry = ConsulRegistry(ShardManagerAPI.SERVICE_ID, config.consulHost(), config.consulPort())
     serviceRegistry.register(5050)
 }
