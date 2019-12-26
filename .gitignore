@@ -142,3 +142,4 @@ gradle-app.setting
 .idea/discord.xml
 .idea/markdown-navigator-enh.xml
 .idea/markdown-navigator.xml
+.env

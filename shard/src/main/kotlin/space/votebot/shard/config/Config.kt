@@ -16,13 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package space.votebot.shard
+package space.votebot.shard.config
 
-import space.votebot.common.ConsulRegistry
-import space.votebot.shard.config.Config
+import io.github.cdimascio.dotenv.dotenv
 
-fun main() {
-    val config = Config()
-    val serviceRegistry = ConsulRegistry("shard", config.consulHost(), config.consulPort())
-    serviceRegistry.register(5051)
+class Config {
+
+    private val dotenv = dotenv {
+        ignoreIfMissing = true
+    }
+
+    fun consulHost() = dotenv["${PREFIX}CONSUL_HOST"] ?: "localhost"
+    fun consulPort() = Integer.parseInt(dotenv["${PREFIX}CONSUL_PORT"] ?: "8500")
+
+    companion object {
+        const val PREFIX = "SHARDMANAGER_"
+    }
 }
