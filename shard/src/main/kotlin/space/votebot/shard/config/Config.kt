@@ -28,6 +28,7 @@ class Config {
 
     fun consulHost() = dotenv["${PREFIX}CONSUL_HOST"] ?: "localhost"
     fun consulPort() = Integer.parseInt(dotenv["${PREFIX}CONSUL_PORT"] ?: "8500")
+    fun sentryDsn() = dotenv["${PREFIX}SENTRY_DSN"]!!
 
     companion object {
         const val PREFIX = "SHARD_"

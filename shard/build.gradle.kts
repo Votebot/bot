@@ -25,5 +25,4 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(project(":common"))
     implementation(project(":shardManagerAPI"))
-    implementation("io.github.cdimascio:java-dotenv:5.1.3")
 }
