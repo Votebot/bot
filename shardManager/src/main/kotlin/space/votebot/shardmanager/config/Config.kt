@@ -16,13 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-plugins {
-    kotlin("jvm")
-}
+package space.votebot.shardmanager.config
 
-dependencies {
-    implementation(kotlin("stdlib"))
-    implementation(project(":common"))
-    implementation(project(":shardManagerAPI"))
-    implementation("io.github.cdimascio:java-dotenv:5.1.3")
+import io.github.cdimascio.dotenv.dotenv
+
+class Config {
+
+    private val dotenv = dotenv {
+        ignoreIfMissing = true
+    }
+
+    fun consulHost() = dotenv["${PREFIX}CONSUL_HOST"] ?: "localhost"
+    fun consulPort() = Integer.parseInt(dotenv["${PREFIX}CONSUL_PORT"] ?: "8500")
+
+    companion object {
+        const val PREFIX = "SHARDMANAGER_"
+    }
 }

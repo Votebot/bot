@@ -20,8 +20,10 @@ package space.votebot.shardmanager
 
 import space.votebot.common.ConsulRegistry
 import space.votebot.shardmanager.api.ShardManagerAPI
+import space.votebot.shardmanager.config.Config
 
 fun main() {
-    val serviceRegistry = ConsulRegistry(ShardManagerAPI.SERVICE_ID, "localhost", 8500)
+    val config = Config()
+    val serviceRegistry = ConsulRegistry(ShardManagerAPI.SERVICE_ID, config.consulHost(), config.consulPort())
     serviceRegistry.register(5050)
 }
