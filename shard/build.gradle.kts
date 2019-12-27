@@ -19,6 +19,11 @@
 plugins {
     java
     kotlin("jvm")
+    application
+}
+
+application {
+    mainClassName = "space.votebot.shard.ApplicationKt"
 }
 
 dependencies {
