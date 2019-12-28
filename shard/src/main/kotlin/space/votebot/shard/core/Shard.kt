@@ -25,7 +25,7 @@ import space.votebot.common.ConsulRegistry
 import space.votebot.shard.config.Config
 import java.util.concurrent.ThreadLocalRandom
 
-class Shard (private val cfg: Config) {
+class Shard(private val cfg: Config) {
 
     private val log = LoggerFactory.getLogger(javaClass)
     private val channel = getShardManagerGRPCChannel()
@@ -38,7 +38,11 @@ class Shard (private val cfg: Config) {
             port = cfg.shardManagerPort
         } else {
             val services = ConsulRegistry(cfg.consulHost, cfg.consulPort).getService(cfg.shardManagerServiceName)
-            val service = services.response[ThreadLocalRandom.current().nextInt(0, services.response.size)]
+            val service = if (services.response.size > 1) {
+                services.response[ThreadLocalRandom.current().nextInt(0, services.response.size)]
+            } else {
+                services.response[0]
+            }
             host = service.address
             port = service.servicePort
         }
