@@ -27,4 +27,8 @@ fun main() {
     val config = Config()
     Sentry.init(config.sentryDsn)
     Shard(config)
+    while (true) {
+        Thread.sleep(20000);
+        println("I live aswell boys!")
+    }
 }
