@@ -26,14 +26,27 @@ class Config {
         ignoreIfMissing = true
     }
 
+    val sentryDsn
+        get() = dotenv["${PREFIX}SENTRY_DSN"]!!
+
+    val disableConsul
+        get() = dotenv["${PREFIX}DISABLE_CONSUL"]?.toBoolean() ?: false
+
     val consulHost
         get() = dotenv["${PREFIX}CONSUL_HOST"] ?: "localhost"
 
     val consulPort
         get() = dotenv["${PREFIX}CONSUL_PORT"]?.toInt() ?: 8500
 
-    val sentryDsn
-        get() = dotenv["${PREFIX}SENTRY_DSN"]!!
+    val shardManagerServiceName
+        get() = dotenv["${PREFIX}SHARDMANAGER_SERVICE_NAME"] ?: "shard-service-votebot"
+
+    val shardManagerHost
+        get() = dotenv["${PREFIX}SHARDMANAGER_HOST"] ?: "localhost"
+
+    val shardManagerPort
+        get() = dotenv["${PREFIX}SHARDMANAGER_PORT"]?.toInt() ?: 5465
+
 
     companion object {
         const val PREFIX = "SHARD_"
