@@ -43,7 +43,7 @@ class Shard(private val cfg: Config) {
             } else {
                 services.response[0]
             }
-            host = service.address
+            host = service.serviceAddress
             port = service.servicePort
         }
         log.info("Connecting to ShardManager instance on {}:{}", host, port)
