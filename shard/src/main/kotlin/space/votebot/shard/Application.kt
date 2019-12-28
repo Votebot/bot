@@ -24,7 +24,7 @@ import space.votebot.shard.config.Config
 
 fun main() {
     val config = Config()
-    Sentry.init(config.sentryDsn())
-    val serviceRegistry = ConsulRegistry("shard", config.consulHost(), config.consulPort())
+    Sentry.init(config.sentryDsn)
+    val serviceRegistry = ConsulRegistry("shard", config.consulHost, config.consulPort)
     serviceRegistry.register(5055)
 }
