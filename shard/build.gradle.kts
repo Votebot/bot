@@ -19,11 +19,26 @@
 plugins {
     java
     kotlin("jvm")
+    id("com.github.johnrengelman.shadow") version "5.2.0"
     application
 }
 
 application {
     mainClassName = "space.votebot.shard.ApplicationKt"
+}
+
+tasks {
+    jar {
+        archiveClassifier.set("original")
+    }
+
+    shadowJar {
+        archiveClassifier.set("")
+    }
+
+    task("artifacts") {
+        dependsOn(jar, shadowJar)
+    }
 }
 
 dependencies {
