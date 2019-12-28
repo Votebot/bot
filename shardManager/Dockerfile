@@ -1,7 +1,7 @@
 FROM gradle AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN gradle :shardManager:clean :shardManager:jar --no-daemon
+RUN gradle :shardManager:clean :shardManager:shadowJar --no-daemon
 
 FROM adoptopenjdk:8-jre-openj9
 RUN mkdir /app
