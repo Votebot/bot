@@ -26,9 +26,14 @@ class Config {
         ignoreIfMissing = true
     }
 
-    fun consulHost() = dotenv["${PREFIX}CONSUL_HOST"] ?: "localhost"
-    fun consulPort() = Integer.parseInt(dotenv["${PREFIX}CONSUL_PORT"] ?: "8500")
-    fun sentryDsn() = dotenv["${PREFIX}SENTRY_DSN"]!!
+    val consulHost
+        get() = dotenv["${PREFIX}CONSUL_HOST"] ?: "localhost"
+
+    val consulPort
+        get() = dotenv["${PREFIX}CONSUL_PORT"]?.toInt() ?: 8500
+
+    val sentryDsn
+        get() = dotenv["${PREFIX}SENTRY_DSN"]!!
 
     companion object {
         const val PREFIX = "SHARD_"
