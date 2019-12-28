@@ -35,13 +35,6 @@ class Config {
     val sentryDsn
         get() = dotenv["${PREFIX}SENTRY_DSN"]!!
 
-    @Deprecated("Fluent getters got replaced by Kotlin getters", ReplaceWith("consulHost"))
-    fun consulHost() = consulHost
-    @Deprecated("Fluent getters got replaced by Kotlin getters", ReplaceWith("consulPort"))
-    fun consulPort() = consulPort
-    @Deprecated("Fluent getters got replaced by Kotlin getters", ReplaceWith("sentryDsn"))
-    fun sentryDsn() = sentryDsn
-
     companion object {
         const val PREFIX = "SHARDMANAGER_"
     }
