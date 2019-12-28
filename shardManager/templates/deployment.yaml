@@ -29,3 +29,6 @@ spec:
         imagePullPolicy: Always
         ports:
           - containerPort: 5465
+        envFrom:
+          - secretRef:
+              name: env
