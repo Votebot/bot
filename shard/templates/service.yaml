@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shard-service
+spec:
+  selector:
+    app: votebot-shard
+  ports:
+    - protocol: TCP
+      port: 5466
+      targetPort: 5466
