@@ -26,4 +26,8 @@ import space.votebot.shardmanager.config.Config
 fun main() {
     val config = Config()
     Sentry.init(config.sentryDsn)
+    while (true) {
+        Thread.sleep(20000);
+        println("I live boys!")
+    }
 }
