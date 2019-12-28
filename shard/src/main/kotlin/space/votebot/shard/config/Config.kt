@@ -39,7 +39,7 @@ class Config {
         get() = dotenv["${PREFIX}CONSUL_PORT"]?.toInt() ?: 8500
 
     val shardManagerServiceName
-        get() = dotenv["${PREFIX}SHARDMANAGER_SERVICE_NAME"] ?: "shard-service-votebot"
+        get() = dotenv["${PREFIX}SHARDMANAGER_SERVICE_NAME"] ?: "shardmanager-service-votebot"
 
     val shardManagerHost
         get() = dotenv["${PREFIX}SHARDMANAGER_HOST"] ?: "localhost"
