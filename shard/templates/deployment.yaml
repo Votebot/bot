@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shard-deployment
+  labels:
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/policy: "force"
+  annotations:
+    keel.sh/pollSchedule: "@every 1m"
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: votebot-shard
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: votebot-shard
+    spec:
+      containers:
+      - name: site
+        image: votebot/shard:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5466
