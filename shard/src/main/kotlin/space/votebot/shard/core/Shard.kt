@@ -20,14 +20,11 @@ package space.votebot.shard.core
 
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
-import org.slf4j.LoggerFactory
 import space.votebot.common.ConsulRegistry
 import space.votebot.shard.config.Config
-import java.util.concurrent.ThreadLocalRandom
 
 class Shard(private val cfg: Config) {
 
-    private val log = LoggerFactory.getLogger(javaClass)
     private val channel = getShardManagerGRPCChannel()
 
     private fun getShardManagerGRPCChannel(): ManagedChannel {
@@ -37,16 +34,12 @@ class Shard(private val cfg: Config) {
             host = cfg.shardManagerHost
             port = cfg.shardManagerPort
         } else {
-            val services = ConsulRegistry(cfg.consulHost, cfg.consulPort).getService(cfg.shardManagerServiceName)
-            val service = if (services.response.size > 1) {
-                services.response[ThreadLocalRandom.current().nextInt(0, services.response.size)]
-            } else {
-                services.response[0]
-            }
-            host = service.serviceAddress
-            port = service.servicePort
+            ConsulRegistry(cfg.consulHost, cfg.consulPort).getService(cfg.shardManagerServiceName).response
+                    .random().apply {
+                        host = serviceAddress
+                        port = servicePort
+                    }
         }
-        log.info("Connecting to ShardManager instance on {}:{}", host, port)
         return ManagedChannelBuilder.forAddress(host, port).usePlaintext().build()
     }
 }
