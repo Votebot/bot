@@ -20,45 +20,50 @@ package space.votebot.common
 
 import com.google.common.net.HostAndPort
 import com.orbitz.consul.Consul
+import com.orbitz.consul.model.agent.FullService
 import com.orbitz.consul.model.agent.ImmutableRegistration
 import com.orbitz.consul.model.agent.Registration
 import com.orbitz.consul.option.QueryOptions
-import org.slf4j.LoggerFactory
+import mu.KotlinLogging
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
+private val log = KotlinLogging.logger { }
+
 class ConsulRegistry(private val serviceId: String, consulHost: String, consulPort: Int) {
 
-    private val log = LoggerFactory.getLogger(javaClass)
-    private val client = Consul.builder().withHostAndPort(HostAndPort.fromHost(consulHost).withDefaultPort(consulPort)).build()
+    private val client =
+        Consul.builder().withHostAndPort(HostAndPort.fromHost(consulHost).withDefaultPort(consulPort)).build()
 
     init {
         Runtime.getRuntime().addShutdownHook(Thread(this::unregister))
     }
 
     fun register(port: Int) {
-        log.debug("Registering service in service registry...")
-        client.agentClient().register(ImmutableRegistration.builder()
+        log.debug { "Registering service in service registry..." }
+        client.agentClient().register(
+            ImmutableRegistration.builder()
                 .id(serviceId)
                 .name(serviceId)
                 .port(port)
                 .addChecks(Registration.RegCheck.ttl(10))
-                .build())
+                .build()
+        )
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(this::updateStatus, 0, 5, TimeUnit.SECONDS)
-        log.info("Registered service in service registry.")
+        log.info { "Registered service in service registry." }
     }
 
-    fun getService(id: String) = client.agentClient().getService(id, QueryOptions.BLANK).response
+    fun getService(id: String): FullService = client.agentClient().getService(id, QueryOptions.BLANK).response
 
     private fun updateStatus() {
-        log.debug("Updating service status in service registry...")
+        log.debug { "Updating service status in service registry..." }
         client.agentClient().pass(serviceId)
-        log.debug("Updated service status in service registry.")
+        log.debug {"Updated service status in service registry." }
     }
 
     private fun unregister() {
-        log.debug("Deregistering service in service registry...")
+        log.debug {"Deregistering service in service registry..." }
         client.agentClient().deregister(serviceId)
-        log.info("Deregistered service in service registry.")
+        log.info {"Deregistered service in service registry." }
     }
 }
