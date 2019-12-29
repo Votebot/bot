@@ -9,6 +9,7 @@ repositories {
 
 dependencies {
     compile(kotlin("stdlib"))
+    implementation("io.github.microutils:kotlin-logging:1.7.8")
     compile("ch.qos.logback:logback-classic:1.3.0-alpha5")
     compile("com.orbitz.consul:consul-client:1.3.9")
     compile("io.github.cdimascio:java-dotenv:5.1.3")
