@@ -26,12 +26,6 @@ class Config {
         ignoreIfMissing = true
     }
 
-    val consulHost
-        get() = dotenv["${PREFIX}CONSUL_HOST"] ?: "localhost"
-
-    val consulPort
-        get() = dotenv["${PREFIX}CONSUL_PORT"]?.toInt() ?:8500
-
     val sentryDsn
         get() = dotenv["${PREFIX}SENTRY_DSN"]!!
 

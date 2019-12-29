@@ -16,19 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package space.votebot.shard
+package space.votebot.shard.core
 
-import io.sentry.Sentry
+import io.grpc.ManagedChannel
+import io.grpc.ManagedChannelBuilder
 import space.votebot.common.ConsulRegistry
 import space.votebot.shard.config.Config
-import space.votebot.shard.core.Shard
 
-fun main() {
-    val config = Config()
-    Sentry.init(config.sentryDsn)
-    Shard(config)
-    while (true) {
-        Thread.sleep(20000);
-        println("I live aswell boys!")
+class Shard(private val cfg: Config) {
+
+    private val channel = getShardManagerGRPCChannel()
+
+    private fun getShardManagerGRPCChannel(): ManagedChannel {
+        val host: String
+        val port: Int
+        if (cfg.disableConsul) {
+            host = cfg.shardManagerHost
+            port = cfg.shardManagerPort
+        } else {
+            ConsulRegistry(cfg.consulHost, cfg.consulPort).getService(cfg.shardManagerServiceName).response
+                    .random().apply {
+                        host = serviceAddress
+                        port = servicePort
+                    }
+        }
+        return ManagedChannelBuilder.forAddress(host, port).usePlaintext().build()
     }
 }
