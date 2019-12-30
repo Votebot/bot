@@ -1,0 +1,5 @@
+replicas: 3
+ports:
+  http: 5463
+  grpcCluster: 5464
+  grpcShard: 5465

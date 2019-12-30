@@ -27,8 +27,19 @@ spec:
       - name: site
         image: votebot/shardmanager:latest
         imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: {{ .Values.ports.http }}
+            httpHeaders:
+              - name: Custom-Header
+                value: Awesome
+          initialDelaySeconds: 10
+          periodSeconds: 3
         ports:
-          - containerPort: 5465
+          - containerPort: {{ .Values.ports.http }}
+          - containerPort: {{ .Values.ports.grpcCluster }}
+          - containerPort: {{ .Values.ports.grpcShard }}
         envFrom:
           - secretRef:
               name: env

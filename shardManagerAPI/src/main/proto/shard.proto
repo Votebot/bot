@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "space.votebot.shardmanager.api";
+
+message Shard {
+    string address = 1;
+    int32 port = 2;
+    Status status = 3;
+    string leader = 4;
+
+    enum Status {
+        IDLE = 0;
+        SERVING = 1;
+    }
+}

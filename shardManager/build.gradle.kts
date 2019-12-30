@@ -29,8 +29,12 @@ tasks.withType<Jar> {
     }
 }
 
+val ktorVersion = "1.2.6"
+
 dependencies {
     implementation(kotlin("stdlib"))
     implementation(project(":common"))
     implementation(project(":shardManagerAPI"))
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
 }

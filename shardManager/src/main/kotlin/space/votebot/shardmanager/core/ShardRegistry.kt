@@ -16,8 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package space.votebot.shardmanager.api
+package space.votebot.shardmanager.core
 
-object ShardManagerAPI {
-    const val SERVICE_ID = "shardmanager"
+import mu.KotlinLogging
+
+class ShardRegistry {
+
+    private val log = KotlinLogging.logger {}
+    val shards = mutableListOf<Shard>()
+
+    fun registerShard(shard: Shard): Boolean {
+        if (shards.stream().anyMatch { it.address == shard.address && it.port == shard.port }) {
+            return false
+        }
+        shards.add(shard)
+        log.info { "Registered shard: ${shard.address}:${shard.port}" }
+        return true
+    }
 }

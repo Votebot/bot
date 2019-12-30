@@ -19,15 +19,11 @@
 package space.votebot.shardmanager
 
 import io.sentry.Sentry
-import space.votebot.common.ConsulRegistry
-import space.votebot.shardmanager.api.ShardManagerAPI
 import space.votebot.shardmanager.config.Config
+import space.votebot.shardmanager.core.ShardManager
 
 fun main() {
     val config = Config()
     Sentry.init(config.sentryDsn)
-    while (true) {
-        Thread.sleep(20000);
-        println("I live boys!")
-    }
+    ShardManager(config)
 }

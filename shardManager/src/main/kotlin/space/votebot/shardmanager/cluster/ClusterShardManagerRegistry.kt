@@ -16,29 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package space.votebot.shardmanager.config
+package space.votebot.shardmanager.cluster
 
-import io.github.cdimascio.dotenv.dotenv
+import mu.KotlinLogging
 
-class Config {
+class ClusterShardManagerRegistry {
 
-    private val dotenv = dotenv {
-        ignoreIfMissing = true
-    }
+    private val log = KotlinLogging.logger {}
+    private val shardManagerList = mutableListOf<ClusterShardManager>()
 
-    val sentryDsn
-        get() = dotenv["${PREFIX}SENTRY_DSN"]!!
-
-    val httpPort
-        get() = dotenv["${PREFIX}HTTP_PORT"]?.toInt() ?: 5463
-
-    val grpcClusterPort
-        get() = dotenv["${PREFIX}GRPC_CLUSTER_PORT"]?.toInt() ?: 5464
-
-    val grpcShardPort
-        get() = dotenv["${PREFIX}GRPC_SHARD_PORT"]?.toInt() ?: 5465
-
-    companion object {
-        const val PREFIX = "SHARDMANAGER_"
+    fun registerShardManager(shardManager: ClusterShardManager): Boolean {
+        if (shardManagerList.stream().anyMatch { it.address == shardManager.address && it.port == shardManager.port }) {
+            return false
+        }
+        shardManagerList.add(shardManager)
+        log.info { "Registered shardManager: ${shardManager.address}:${shardManager.port}" }
+        return true
     }
 }

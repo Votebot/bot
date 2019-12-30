@@ -16,29 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package space.votebot.shardmanager.config
+package space.votebot.shardmanager.cluster
 
-import io.github.cdimascio.dotenv.dotenv
-
-class Config {
-
-    private val dotenv = dotenv {
-        ignoreIfMissing = true
-    }
-
-    val sentryDsn
-        get() = dotenv["${PREFIX}SENTRY_DSN"]!!
-
-    val httpPort
-        get() = dotenv["${PREFIX}HTTP_PORT"]?.toInt() ?: 5463
-
-    val grpcClusterPort
-        get() = dotenv["${PREFIX}GRPC_CLUSTER_PORT"]?.toInt() ?: 5464
-
-    val grpcShardPort
-        get() = dotenv["${PREFIX}GRPC_SHARD_PORT"]?.toInt() ?: 5465
-
-    companion object {
-        const val PREFIX = "SHARDMANAGER_"
-    }
-}
+data class ClusterShardManager(
+        val address: String,
+        val port: Int
+)

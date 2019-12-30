@@ -16,29 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package space.votebot.shardmanager.config
+package space.votebot.shardmanager.core
 
-import io.github.cdimascio.dotenv.dotenv
+import space.votebot.shardmanager.cluster.ClusterGRPCServer
+import space.votebot.shardmanager.cluster.ClusterShardManagerRegistry
+import space.votebot.shardmanager.config.Config
 
-class Config {
+class ShardManager(cfg: Config) {
 
-    private val dotenv = dotenv {
-        ignoreIfMissing = true
-    }
+    private val clusterGRPCServer = ClusterGRPCServer(cfg.grpcClusterPort, this)
+    var statusReady = false
+    var statusHealthy = true
+    val shardRegistry = ShardRegistry()
+    val shardManagerRegistry = ClusterShardManagerRegistry()
 
-    val sentryDsn
-        get() = dotenv["${PREFIX}SENTRY_DSN"]!!
-
-    val httpPort
-        get() = dotenv["${PREFIX}HTTP_PORT"]?.toInt() ?: 5463
-
-    val grpcClusterPort
-        get() = dotenv["${PREFIX}GRPC_CLUSTER_PORT"]?.toInt() ?: 5464
-
-    val grpcShardPort
-        get() = dotenv["${PREFIX}GRPC_SHARD_PORT"]?.toInt() ?: 5465
-
-    companion object {
-        const val PREFIX = "SHARDMANAGER_"
+    init {
+        Webserver(this, cfg.httpPort)
+        clusterGRPCServer.run()
     }
 }

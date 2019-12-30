@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "space.votebot.shardmanager.api.cluster";
+
+package space.votebot.shardmanager.api.cluster;
+
+import "shard.proto";
+
+message ConnectRequest {
+    string address = 1;
+    int32 port = 2;
+}
+
+message ConnectResponse {
+    repeated Shard shards = 1;
+}
+
+service ShardManagerCluster {
+    rpc Connect (ConnectRequest) returns (ConnectResponse) {}
+}
