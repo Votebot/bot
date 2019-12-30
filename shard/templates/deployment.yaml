@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: site
-        image: votebot/shard:latest
+        image: votebot/shard:master
         imagePullPolicy: Always
         ports:
           - containerPort: 5466
