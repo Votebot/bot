@@ -33,7 +33,7 @@ jobs:
       - name: Tag Image Master
         if: github.ref == 'refs/heads/master'
         env:
-          IMAGE: votebot/shardmanager
+          IMAGE: votebot/shard
           DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
