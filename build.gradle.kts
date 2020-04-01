@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     java
     application
@@ -11,6 +13,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     jcenter()
+    maven("https://kotlin.bintray.com/ktor")
 }
 
 dependencies {
@@ -25,6 +28,13 @@ dependencies {
 
     // Metrics
     implementation("com.influxdb", "influxdb-client-java", "1.6.0")
+
+    // Ktor
+    implementation("io.ktor", "ktor-server-netty", "1.3.2")
+    implementation("io.ktor", "ktor-server-core", "1.3.2")
+    implementation("io.ktor", "ktor-websockets", "1.3.2")
+    implementation("io.ktor", "ktor-jackson", "1.3.2")
+    testImplementation("io.ktor", "ktor-server-tests", "1.3.2")
 
     // Database
     implementation("org.jetbrains.exposed", "exposed-core", "0.22.1")
@@ -45,4 +55,16 @@ dependencies {
 
 application {
     mainClassName = "space.votebot.bot.LauncherKt"
+}
+
+tasks {
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
+        }
+    }
+
+    "shadowJar"(ShadowJar::class) {
+        archiveFileName.set("gateway-service.jar")
+    }
 }
