@@ -36,6 +36,9 @@ dependencies {
     implementation("io.ktor", "ktor-jackson", "1.3.2")
     testImplementation("io.ktor", "ktor-server-tests", "1.3.2")
 
+    // JDA
+    implementation("net.dv8tion", "JDA", "4.1.1_127")
+
     // Database
     implementation("org.jetbrains.exposed", "exposed-core", "0.22.1")
     implementation("org.jetbrains.exposed", "exposed-jdbc", "0.22.1")
