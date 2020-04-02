@@ -3,14 +3,19 @@ package space.votebot.bot.config
 /**
  * Environment types of VoteBot.
  */
-enum class Environment {
+enum class Environment(val debug: Boolean) {
     /**
      * Development environment.
      */
-    DEVELOPMENT,
+    DEVELOPMENT(true),
+
+    /**
+     * Staging environment.
+     */
+    STAGING(false),
 
     /**
      * Production environment
      */
-    PRODUCTION
+    PRODUCTION(false);
 }

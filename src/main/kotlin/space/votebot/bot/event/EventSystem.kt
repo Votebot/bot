@@ -116,10 +116,10 @@ class AnnotatedEventManager(
      */
     override fun handle(event: GenericEvent) {
         val eventType = event::class
-        val callParents =
-                eventType.findAnnotation<EventDescriber>()?.callParents ?: true
 
         tailrec fun callEvent(eventClass: KClass<*>) {
+            val callParents =
+                    eventType.findAnnotation<EventDescriber>()?.callParents ?: true
             val functions = this.functions[eventClass.starProjectedType] ?: return
             functions.forEach {
                 GlobalScope.launch(coroutine) {

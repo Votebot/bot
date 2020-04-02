@@ -58,6 +58,11 @@ class Config {
      */
     val discordToken: String = dotenv["${PREFIX}DISCORD_TOKEN"] ?: ""
 
+    /**
+     * The id of the channel the error handler should send the messages to.
+     */
+    val errorReportChannel: Long = dotenv["${PREFIX}ERROR_REPORT_CHANNEL"]?.toLong() ?: 0
+
     companion object {
         private const val PREFIX = "BOT_"
     }

@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test
 import space.votebot.bot.event.AnnotatedEventManager
 import space.votebot.bot.event.EventSubscriber
 
-
 class EventTest {
     @Test
     fun test() {
