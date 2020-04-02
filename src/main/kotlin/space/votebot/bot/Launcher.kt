@@ -21,6 +21,5 @@ fun main() {
         Sentry.init()
     }
 
-    val bot = VoteBot(cfg)
-    bot.start()
+    VoteBot(cfg)
 }

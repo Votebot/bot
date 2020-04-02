@@ -1,16 +1,16 @@
 package space.votebot.bot.core
 
-import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
-import net.dv8tion.jda.api.sharding.ShardManager
+import net.dv8tion.jda.api.hooks.IEventManager
+import okhttp3.OkHttpClient
 import space.votebot.bot.config.Config
+import space.votebot.bot.event.AnnotatedEventManager
 
 class VoteBot(private val config: Config) {
 
-    private lateinit var shardManager: ShardManager
+    val eventManager: IEventManager = AnnotatedEventManager()
+    val httpClient: OkHttpClient = OkHttpClient()
 
-    fun start() {
-        val shardManagerBuilder = DefaultShardManagerBuilder.createDefault(config.discordToken)
-        shardManagerBuilder.addEventListeners()
-        shardManager = shardManagerBuilder.build()
-    }
+    val discord: Discord = Discord(config.discordToken, httpClient, eventManager)
+
+
 }
