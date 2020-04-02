@@ -64,6 +64,8 @@ application {
     mainClassName = "space.votebot.bot.LauncherKt"
 }
 
+
+
 tasks {
     compileKotlin {
         kotlinOptions {
@@ -74,5 +76,9 @@ tasks {
 
     "shadowJar"(ShadowJar::class) {
         archiveFileName.set("bot.jar")
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }

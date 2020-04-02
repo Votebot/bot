@@ -6,7 +6,7 @@ import io.sentry.Sentry
 import org.slf4j.LoggerFactory
 import space.votebot.bot.config.Config
 import space.votebot.bot.config.Environment
-import space.votebot.bot.core.VoteBot
+import space.votebot.bot.core.VoteBotImpl as VoteBot
 
 fun main() {
     val cfg = Config()
