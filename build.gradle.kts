@@ -36,17 +36,22 @@ dependencies {
     testImplementation("io.ktor", "ktor-server-tests", "1.3.2")
 
     // JDA
-    implementation("net.dv8tion", "JDA", "4.1.1_127")
+    implementation("net.dv8tion", "JDA", "4.1.1_127") {
+        exclude(module = "opus-java")
+    }
 
     // Database
     implementation("org.jetbrains.exposed", "exposed-core", "0.22.1")
     implementation("org.jetbrains.exposed", "exposed-jdbc", "0.22.1")
     implementation("org.jetbrains.exposed", "exposed-dao", "0.22.1")
     implementation("org.jetbrains.exposed", "exposed-java-time", "0.22.1")
+    implementation("com.zaxxer", "HikariCP", "3.4.2")
+    implementation("org.postgresql", "postgresql", "42.2.12")
 
     // Util
     implementation("io.github.cdimascio", "java-dotenv", "5.1.4")
     implementation("com.squareup.okhttp3", "okhttp", "4.4.0")
+    implementation("xyz.downgoon", "snowflake", "1.0.0")
 
     // Kotlin
     implementation(kotlin("stdlib-jdk8"))

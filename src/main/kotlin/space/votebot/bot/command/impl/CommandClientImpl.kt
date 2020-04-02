@@ -133,7 +133,7 @@ class CommandClientImpl(
     private fun resolvePrefix(guild: Guild, content: String): Int? {
         val mention = guild.selfMember.asMention()
         // lazy because there is no need to fetch guild prefix if mention or global prefix is used
-        val guildPrefix by lazy { "v!" } // TODO guild custom prefix
+        val guildPrefix by lazy { prefix } // TODO guild custom prefix
         return when {
             content.startsWith(mention) -> mention.length
             content.startsWith(prefix) -> prefix.length

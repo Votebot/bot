@@ -63,6 +63,22 @@ class Config {
      */
     val errorReportChannel: Long = dotenv["${PREFIX}ERROR_REPORT_CHANNEL"]?.toLong() ?: 0
 
+    /**
+     * The database address.
+     * Must be something like `jdbc:postgresql://host/database`.
+     */
+    val dbAddress: String = dotenv["${PREFIX}DB_ADDRESS"] ?: "jdbc:postgresql://localhost/postgres"
+
+    /**
+     * The database user.
+     */
+    val dbUser: String = dotenv["${PREFIX}DB_USER"] ?: "postgres"
+
+    /**
+     * The database password.
+     */
+    val dbPassword: String = dotenv["${PREFIX}DB_PASSWORD"] ?: "postgres"
+
     companion object {
         private const val PREFIX = "BOT_"
     }
