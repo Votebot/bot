@@ -4,7 +4,6 @@ plugins {
     java
     application
     id("com.github.johnrengelman.shadow") version "5.2.0"
-    id("com.google.protobuf") version "0.8.8"
     kotlin("jvm") version "1.3.70"
 }
 
@@ -68,6 +67,6 @@ tasks {
     }
 
     "shadowJar"(ShadowJar::class) {
-        archiveFileName.set("gateway-service.jar")
+        archiveFileName.set("bot.jar")
     }
 }
