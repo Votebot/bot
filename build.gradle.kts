@@ -46,13 +46,18 @@ dependencies {
 
     // Util
     implementation("io.github.cdimascio", "java-dotenv", "5.1.4")
+    implementation("com.squareup.okhttp3", "okhttp", "4.4.0")
 
     // Kotlin
     implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("reflect"))
 
     // Tests
     testImplementation("org.jetbrains.kotlin", "kotlin-test-junit5", "1.3.71")
-    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.6.1")
+    testImplementation("org.mockito", "mockito-core", "3.3.3")
+    testImplementation("com.nhaarman.mockitokotlin2", "mockito-kotlin", "2.2.0")
+    testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.6.0")
+    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.6.0")
 }
 
 application {
@@ -62,6 +67,7 @@ application {
 tasks {
     compileKotlin {
         kotlinOptions {
+            jvmTarget = "12"
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
         }
     }
