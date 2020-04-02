@@ -1,12 +1,8 @@
 package space.votebot.bot
 
-class App {
-    val greeting: String
-        get() {
-            return "Hello world."
-        }
-}
+import mu.KotlinLogging
 
-fun main(args: Array<String>) {
-    println(App().greeting)
+fun main() {
+    val log = KotlinLogging.logger { }
+    log.info { "Starting VoteBot..." }
 }
