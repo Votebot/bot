@@ -3,25 +3,30 @@ package space.votebot.bot.metrics
 import com.influxdb.client.InfluxDBClient
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.write.Point
+import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.ObsoleteCoroutinesApi
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.channels.ticker
 import mu.KotlinLogging
+import space.votebot.bot.util.DefaultThreadFactory
 import java.net.InetAddress
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 /**
- * MemoryMetrics posts the number of total heap and the amount of allocated heap to InfluxDB.
+ * DatabaseMetrics posts information about the the database connection pool to InfluxDB.
  * @param client the [InfluxDBClient]
  * @param bucket the InfluxDB bucket to post stats to
  * @param org the InfluxDB org to post stats to
  */
-class MemoryMetrics(private val client: InfluxDBClient, private val bucket: String, private val org: String) {
+class DatabaseMetrics(private val dataSource: HikariDataSource, private val client: InfluxDBClient, private val bucket: String, private val org: String) {
 
     private val log = KotlinLogging.logger { }
 
+    private val context = DefaultThreadFactory.newSingleThreadExecutor("db-metrics").asCoroutineDispatcher()
+
     @OptIn(ObsoleteCoroutinesApi::class)
-    private val scheduler = ticker(TimeUnit.SECONDS.toMillis(5), 0)
+    private val scheduler = ticker(TimeUnit.SECONDS.toMillis(5), 0, context = context)
 
     private val hostName = InetAddress.getLocalHost().hostName
 
@@ -30,15 +35,14 @@ class MemoryMetrics(private val client: InfluxDBClient, private val bucket: Stri
      */
     suspend fun start() {
         for (unit in scheduler) {
-            client.writeApi.writePoint(bucket, org, Point.measurement("memory").apply {
+            client.writeApi.writePoint(bucket, org, Point.measurement("db_connections").apply {
                 addTag("host", hostName)
-                addTag("java.version", System.getProperty("java.version"))
-                addTag("java.vm.name", System.getProperty("java.vm.name"))
-                addField("total", Runtime.getRuntime().totalMemory())
-                addField("allocated", Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())
+                addField("active", dataSource.hikariPoolMXBean.activeConnections)
+                addField("idle", dataSource.hikariPoolMXBean.idleConnections)
+                addField("total", dataSource.hikariPoolMXBean.totalConnections)
                 time(Instant.now().toEpochMilli(), WritePrecision.MS)
             })
-            log.debug { "Posted Memory Metrics." }
+            log.debug { "Posted UserCount Metrics." }
         }
     }
 
@@ -47,5 +51,6 @@ class MemoryMetrics(private val client: InfluxDBClient, private val bucket: Stri
      */
     fun stop() {
         scheduler.cancel()
+        context.close()
     }
 }

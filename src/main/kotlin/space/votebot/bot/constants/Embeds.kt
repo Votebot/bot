@@ -89,7 +89,7 @@ object Embeds {
     }
 
     private fun formatCommandUsage(command: AbstractCommand): String =
-        "${Constants.prefix} ${command.name} ${command.usage}"
+        "${Constants.prefix}${command.name} ${command.usage}"
 
     private fun formatSubCommandUsage(command: AbstractSubCommand): String {
         val builder = StringBuilder(Constants.prefix)
