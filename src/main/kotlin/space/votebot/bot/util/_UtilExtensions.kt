@@ -1,8 +1,10 @@
 package space.votebot.bot.util
 
+import kotlinx.coroutines.future.await
 import space.votebot.bot.command.AbstractCommand
 import mu.KotlinLogging
 import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.requests.RestAction
 import net.dv8tion.jda.api.utils.data.DataObject
 import okhttp3.Call
 import okhttp3.Callback
@@ -83,3 +85,8 @@ fun String.limit(amount: Int, contraction: String = "..."): String =
  * Public map constructor of [DataObject].
  */
 class MapJsonObject(map: Map<String, Any>) : DataObject(map)
+
+/**
+ * Awaits the completion of a rest action
+ */
+suspend fun <T> RestAction<T>.await(): T = submit().await()

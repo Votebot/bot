@@ -56,6 +56,7 @@ dependencies {
     // Kotlin
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
+    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.3.5")
 
     // Tests
     testImplementation("org.jetbrains.kotlin", "kotlin-test-junit5", "1.3.71")

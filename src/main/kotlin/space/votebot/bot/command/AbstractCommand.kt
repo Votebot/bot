@@ -33,6 +33,6 @@ abstract class AbstractCommand : CommandRegistry<AbstractSubCommand> {
      * Invokes the command.
      * @param context the [Context] in which the command is invoked
      */
-    abstract fun execute(context: Context)
+    abstract suspend fun execute(context: Context)
 
 }
