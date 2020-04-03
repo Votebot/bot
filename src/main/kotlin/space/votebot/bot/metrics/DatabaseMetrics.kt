@@ -1,6 +1,5 @@
 package space.votebot.bot.metrics
 
-import com.influxdb.client.InfluxDBClient
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.write.Point
 import com.zaxxer.hikari.HikariDataSource
@@ -9,17 +8,16 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.channels.ticker
 import mu.KotlinLogging
 import space.votebot.bot.util.DefaultThreadFactory
+import space.votebot.bot.util.InfluxDBConnection
 import java.net.InetAddress
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 /**
  * DatabaseMetrics posts information about the the database connection pool to InfluxDB.
- * @param client the [InfluxDBClient]
- * @param bucket the InfluxDB bucket to post stats to
- * @param org the InfluxDB org to post stats to
+ * @param influx the [InfluxDBConnection]
  */
-class DatabaseMetrics(private val dataSource: HikariDataSource, private val client: InfluxDBClient, private val bucket: String, private val org: String) {
+class DatabaseMetrics(private val dataSource: HikariDataSource, private val influx: InfluxDBConnection) {
 
     private val log = KotlinLogging.logger { }
 
@@ -35,7 +33,7 @@ class DatabaseMetrics(private val dataSource: HikariDataSource, private val clie
      */
     suspend fun start() {
         for (unit in scheduler) {
-            client.writeApi.writePoint(bucket, org, Point.measurement("db_connections").apply {
+            influx.writePoint(Point.measurement("db_connections").apply {
                 addTag("host", hostName)
                 addField("active", dataSource.hikariPoolMXBean.activeConnections)
                 addField("idle", dataSource.hikariPoolMXBean.idleConnections)

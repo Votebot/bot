@@ -1,5 +1,6 @@
 package space.votebot.bot.command.impl
 
+import com.influxdb.client.write.Point
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -22,9 +23,11 @@ import space.votebot.bot.util.DefaultThreadFactory
 import space.votebot.bot.util.asMention
 import space.votebot.bot.util.hasSubCommands
 import java.time.Duration
+import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -42,6 +45,7 @@ class CommandClientImpl(
 ) : CommandClient {
 
     private val delimiter = "\\s+".toRegex()
+    private val commandCounter = AtomicInteger()
 
     override val permissionHandler: PermissionHandler = PermissionChecker()
     override val commandAssociations: MutableMap<String, AbstractCommand> = mutableMapOf()
@@ -90,8 +94,19 @@ class CommandClientImpl(
                                     message.member!!
                             )
                     ) return bot.eventManager.handle(CommandNoPermissionEvent(context.jda, context.responseNumber, context.message, context))
-
+                    val t1 = Instant.now()
                     processCommand(command, context)
+                    val t2 = Instant.now()
+                    GlobalScope.launch {
+                        bot.influx.writePoint(Point.measurement("commands_executed")
+                                .addTag("command", command.name)
+                                .addTag("executor", message.author.id)
+                                .addTag("guild_id", message.guild.id)
+                                .addTag("channel_id", message.channel.id)
+                                .addField("duration", t2.minusMillis(t1.toEpochMilli()).toEpochMilli())
+                                .addField("count", commandCounter.incrementAndGet())
+                        )
+                    }
                 })
     }
 

@@ -22,11 +22,15 @@ import space.votebot.bot.event.AnnotatedEventManager
 import space.votebot.bot.metrics.DatabaseMetrics
 import space.votebot.bot.metrics.GuildCountMetrics
 import space.votebot.bot.metrics.MemoryMetrics
+import space.votebot.bot.util.DefaultInfluxDBConnection
+import space.votebot.bot.util.InfluxDBConnection
+import space.votebot.bot.util.NopInfluxDBConnection
 
 class VoteBotImpl(private val config: Config) : VoteBot {
 
     private val log = KotlinLogging.logger { }
     private val dataSource: HikariDataSource
+    override val influx: InfluxDBConnection
     override val eventManager: IEventManager = AnnotatedEventManager()
     override val httpClient: OkHttpClient = OkHttpClient()
     override val discord: Discord
@@ -36,6 +40,10 @@ class VoteBotImpl(private val config: Config) : VoteBot {
     init {
         dataSource = initDatabase()
         discord = Discord(config.discordToken, httpClient, eventManager)
+
+        influx = if (config.environment.debug && config.enableMetrics || config.environment.debug && !config.enableMetrics) {
+            DefaultInfluxDBConnection(InfluxDBClientFactory.create(config.influxDbAddress, config.influxDbToken.toCharArray()), config.influxDbBucket, config.influxDbOrg)
+        } else NopInfluxDBConnection()
 
         eventManager.register(commandClient)
         if (debugMode) {
@@ -62,12 +70,12 @@ class VoteBotImpl(private val config: Config) : VoteBot {
 
     private suspend fun initMetrics() {
         coroutineScope {
+            // If metrics are disabled we usually just pass the no-op InfluxDBConnection. But as these are constantly
+            // running we do this double check here.
             if (config.environment.debug && config.enableMetrics || config.environment.debug && !config.enableMetrics) {
-                log.info { "Enabled metrics." }
-                val influxDBClient = InfluxDBClientFactory.create(config.influxDbAddress, config.influxDbToken.toCharArray())
-                launch { MemoryMetrics(influxDBClient, config.influxDbBucket, config.influxDbOrg).start() }
-                launch { DatabaseMetrics(dataSource, influxDBClient, config.influxDbBucket, config.influxDbOrg).start() }
-                launch { GuildCountMetrics(discord.shardManager, influxDBClient, config.influxDbBucket, config.influxDbOrg).start() }
+                launch { MemoryMetrics(influx).start() }
+                launch { DatabaseMetrics(dataSource, influx).start() }
+                launch { GuildCountMetrics(discord.shardManager, influx).start() }
             }
         }
     }
