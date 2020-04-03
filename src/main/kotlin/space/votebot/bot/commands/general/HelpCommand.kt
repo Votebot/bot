@@ -17,7 +17,7 @@ class HelpCommand : AbstractCommand() {
     override val permission: Permission = Permission.ANY
     override val category: CommandCategory = CommandCategory.GENERAL
 
-    override fun execute(context: Context) {
+    override suspend fun execute(context: Context) {
         val commandName = context.args.optionalArgument(0)
         if (commandName == null) {
             sendCommandList(context)

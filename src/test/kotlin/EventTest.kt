@@ -1,5 +1,3 @@
-package space.votebot.bot
-
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.Dispatchers

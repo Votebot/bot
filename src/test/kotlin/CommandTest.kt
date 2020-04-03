@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import space.votebot.bot.command.AbstractCommand
 import space.votebot.bot.command.AbstractSubCommand
+import space.votebot.bot.command.CommandCategory
+import space.votebot.bot.command.context.Context
 import space.votebot.bot.command.impl.CommandClientImpl
 import space.votebot.bot.command.permission.Permission
 import space.votebot.bot.constants.Constants
@@ -24,7 +26,7 @@ import java.util.function.Consumer
 class CommandTest {
 
     @Test
-    fun `check prefixed normal command`() {
+    suspend fun `check prefixed normal command`() {
         val message = mockMessage {
             on { contentRaw }.thenReturn("v!test ${arguments.joinToString(" ")}")
         }
@@ -37,7 +39,7 @@ class CommandTest {
     }
 
     @Test
-    fun `check mentioned normal command`() {
+    suspend fun `check mentioned normal command`() {
         val mention = selfMember.asMention()
         val message = mockMessage {
             on { contentRaw }.thenReturn("$mention test ${arguments.joinToString(" ")}")
@@ -51,7 +53,7 @@ class CommandTest {
     }
 
     @Test
-    fun `check prefixed sub command`() {
+    suspend fun `check prefixed sub command`() {
         val message = mockMessage {
             on { contentRaw }.thenReturn("v!test ${arguments.joinToString(" ")}")
         }
@@ -69,7 +71,7 @@ class CommandTest {
     }
 
     @Test
-    fun `check mentioned sub command`() {
+    suspend fun `check mentioned sub command`() {
         val mention = selfMember.asMention()
         val message = mockMessage {
             on { contentRaw }.thenReturn("$mention test ${arguments.joinToString(" ")}")
@@ -90,9 +92,20 @@ class CommandTest {
     @Test
     fun `check command error handling`() {
         val error = RuntimeException("Test error")
-        val command = mockCommand {
-            on { aliases }.thenReturn(listOf("test"))
-            on { execute(any()) }.thenThrow(error)
+        val command = object : AbstractCommand() {
+            override val aliases: List<String> = listOf("test")
+            override val displayName: String
+                get() = TODO("Not yet implemented")
+            override val description: String
+                get() = TODO("Not yet implemented")
+            override val usage: String
+                get() = TODO("Not yet implemented")
+            override val permission: Permission = Permission.ANY
+            override val category: CommandCategory
+                get() = TODO("Not yet implemented")
+
+            override suspend fun execute(context: Context) = throw error
+
         }
 
         val listener: Validator = mock()
@@ -115,7 +128,7 @@ class CommandTest {
         fun onError(event: CommandErrorEvent)
     }
 
-    private fun ensureCommandCall(
+    private suspend fun ensureCommandCall(
             message: Message,
             command: AbstractCommand,
             arguments: List<String>,
