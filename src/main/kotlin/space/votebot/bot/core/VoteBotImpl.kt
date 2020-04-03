@@ -15,6 +15,7 @@ import space.votebot.bot.command.impl.CommandClientImpl
 import space.votebot.bot.command.impl.DebugCommandHandler
 import space.votebot.bot.command.impl.ProductionCommandHandler
 import space.votebot.bot.commands.general.HelpCommand
+import space.votebot.bot.commands.settings.PrefixCommand
 import space.votebot.bot.config.Config
 import space.votebot.bot.constants.Constants
 import space.votebot.bot.database.VoteBotGuilds
@@ -81,7 +82,10 @@ class VoteBotImpl(private val config: Config) : VoteBot {
     }
 
     private fun registerCommands() {
-        commandClient.registerCommands(HelpCommand())
+        commandClient.registerCommands(
+                HelpCommand(),
+                PrefixCommand()
+        )
     }
 
     suspend fun start() {

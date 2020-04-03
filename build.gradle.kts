@@ -62,6 +62,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin", "kotlin-test-junit5", "1.3.71")
     testImplementation("org.mockito", "mockito-core", "3.3.3")
     testImplementation("com.nhaarman.mockitokotlin2", "mockito-kotlin", "2.2.0")
+    testImplementation("io.zonky.test", "embedded-postgres", "1.2.6")
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.6.0")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.6.0")
 }

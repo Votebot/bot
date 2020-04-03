@@ -1,29 +1,13 @@
-import com.nhaarman.mockitokotlin2.*
-import kotlinx.coroutines.Dispatchers
-import net.dv8tion.jda.api.JDA
-import net.dv8tion.jda.api.entities.*
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
-import net.dv8tion.jda.api.hooks.IEventManager
-import net.dv8tion.jda.api.requests.RestAction
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
-import space.votebot.bot.command.AbstractCommand
-import space.votebot.bot.command.AbstractSubCommand
-import space.votebot.bot.command.CommandCategory
-import space.votebot.bot.command.context.Context
-import space.votebot.bot.command.impl.CommandClientImpl
-import space.votebot.bot.command.permission.Permission
-import space.votebot.bot.constants.Constants
-import space.votebot.bot.core.VoteBot
-import space.votebot.bot.event.AnnotatedEventManager
-import space.votebot.bot.event.EventSubscriber
-import space.votebot.bot.events.CommandErrorEvent
-import space.votebot.bot.util.asMention
-import java.util.concurrent.CompletableFuture
-import java.util.function.BooleanSupplier
-import java.util.function.Consumer
-
+/*
 class CommandTest {
+
+    @BeforeTest
+    fun connectDB() {
+        Database.connect(EmbeddedPostgres.start().postgresDatabase)
+        transaction {
+            SchemaUtils.createMissingTablesAndColumns(VoteBotGuilds)
+        }
+    }
 
     @Test
     suspend fun `check prefixed normal command`() {
@@ -171,6 +155,7 @@ class CommandTest {
     companion object {
         private lateinit var bot: VoteBot
         private val arguments = listOf("sub", "2", "3")
+        private val influx = NopInfluxDBConnection()
         private lateinit var jda: JDA
         private lateinit var channel: TextChannel
         private lateinit var selfMember: Member
@@ -184,6 +169,7 @@ class CommandTest {
         @Suppress("unused")
         fun `setup mock objects`() {
             bot = mock {
+                on { this.influx }.thenReturn(influx)
                 on { eventManager }.thenReturn(eventManager)
             }
             client = CommandClientImpl(bot, Constants.prefix, Dispatchers.Unconfined)
@@ -223,4 +209,4 @@ private class EmptyRestAction<T> : RestAction<T> {
 
     override fun setCheck(checks: BooleanSupplier?): RestAction<T> = this
 
-}
+}*/

@@ -9,12 +9,14 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent
+import org.jetbrains.exposed.sql.transactions.transaction
 import space.votebot.bot.command.AbstractCommand
 import space.votebot.bot.command.CommandClient
 import space.votebot.bot.command.PermissionHandler
 import space.votebot.bot.command.context.Arguments
 import space.votebot.bot.command.context.Context
 import space.votebot.bot.core.VoteBot
+import space.votebot.bot.database.VoteBotGuild
 import space.votebot.bot.event.EventSubscriber
 import space.votebot.bot.events.CommandErrorEvent
 import space.votebot.bot.events.CommandExecutedEvent
@@ -67,7 +69,7 @@ class CommandClientImpl(
      * Listens for new messages.
      */
     @EventSubscriber
-    fun onMessage(event: GuildMessageReceivedEvent): Unit = dispatchCommand(event.message, event.responseNumber)
+    fun onMessage(event: GuildMessageReceivedEvent) = dispatchCommand(event.message, event.responseNumber)
 
     private fun dispatchCommand(message: Message, responseNumber: Long) {
         val author = message.author
@@ -83,7 +85,7 @@ class CommandClientImpl(
 
         val nonPrefixedInput = rawInput.substring(prefix).trim()
 
-        val (command, arguments) = resolveCommand(nonPrefixedInput) ?: return // No command found
+        val (command, arguments, parent) = resolveCommand(nonPrefixedInput) ?: return // No command found
 
         message.textChannel.sendTyping() // since rest actions are async, we need to wait for send typing to succeed
                 .queue(fun(_: Void?) { // Since Void has a private constructor JDA passes in null, so it has to be nullable even if it is not used
@@ -98,11 +100,8 @@ class CommandClientImpl(
                     processCommand(command, context)
                     val t2 = Instant.now()
                     GlobalScope.launch {
+                        println(parent?.name ?: command.name)
                         bot.influx.writePoint(Point.measurement("commands_executed")
-                                .addTag("command", command.name)
-                                .addTag("executor", message.author.id)
-                                .addTag("guild_id", message.guild.id)
-                                .addTag("channel_id", message.channel.id)
                                 .addField("duration", t2.minusMillis(t1.toEpochMilli()).toEpochMilli())
                                 .addField("count", commandCounter.incrementAndGet())
                         )
@@ -146,16 +145,18 @@ class CommandClientImpl(
     }
 
     private fun resolvePrefix(guild: Guild, content: String): Int? {
+        val voteBotGuild: VoteBotGuild by lazy {
+            transaction {
+                VoteBotGuild.findByGuildIdOrNew(guild.idLong)
+            }
+        }
         val mention = guild.selfMember.asMention()
-        // lazy because there is no need to fetch guild prefix if mention or global prefix is used
-        val guildPrefix by lazy { prefix } // TODO guild custom prefix
         return when {
             content.startsWith(mention) -> mention.length
-            content.startsWith(prefix) -> prefix.length
-            content.startsWith(guildPrefix) -> guildPrefix.length
-            else -> null
+            content.startsWith(voteBotGuild.prefix) -> voteBotGuild.prefix.length
+            else -> if (!voteBotGuild.disableDefaultPrefix && content.startsWith(prefix)) return prefix.length else null
         }
     }
-
-    private data class CommandContainer(val command: AbstractCommand, val args: Arguments)
 }
+
+private data class CommandContainer(val command: AbstractCommand, val args: Arguments, val parent: AbstractCommand? = null)

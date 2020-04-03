@@ -11,12 +11,17 @@ enum class CommandCategory(val displayName: String) {
     GENERAL("General"),
 
     /**
-     * Bot owner exclusive commands.
+     * Settings commands.
      */
-    BOT_OWNER("Bot Devloper"),
+    SETTINGS("Settings"),
 
     /**
      * Voting related commands.
      */
-    VOTING("Voting")
+    VOTING("Voting"),
+
+    /**
+     * Bot owner exclusive commands.
+     */
+    BOT_OWNER("Bot Devloper")
 }
