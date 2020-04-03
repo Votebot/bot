@@ -1,22 +1,20 @@
 package space.votebot.bot.metrics
 
-import com.influxdb.client.InfluxDBClient
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.write.Point
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.ticker
 import mu.KotlinLogging
+import space.votebot.bot.util.InfluxDBConnection
 import java.net.InetAddress
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 /**
  * MemoryMetrics posts the number of total heap and the amount of allocated heap to InfluxDB.
- * @param client the [InfluxDBClient]
- * @param bucket the InfluxDB bucket to post stats to
- * @param org the InfluxDB org to post stats to
+ * @param influx the [InfluxDBConnection]
  */
-class MemoryMetrics(private val client: InfluxDBClient, private val bucket: String, private val org: String) {
+class MemoryMetrics(private val influx: InfluxDBConnection) {
 
     private val log = KotlinLogging.logger { }
 
@@ -30,7 +28,7 @@ class MemoryMetrics(private val client: InfluxDBClient, private val bucket: Stri
      */
     suspend fun start() {
         for (unit in scheduler) {
-            client.writeApi.writePoint(bucket, org, Point.measurement("memory").apply {
+            influx.writePoint(Point.measurement("memory").apply {
                 addTag("host", hostName)
                 addTag("java.version", System.getProperty("java.version"))
                 addTag("java.vm.name", System.getProperty("java.vm.name"))

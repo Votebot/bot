@@ -1,6 +1,5 @@
 package space.votebot.bot.metrics
 
-import com.influxdb.client.InfluxDBClient
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.write.Point
 import kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -9,16 +8,15 @@ import kotlinx.coroutines.channels.ticker
 import mu.KotlinLogging
 import net.dv8tion.jda.api.sharding.ShardManager
 import space.votebot.bot.util.DefaultThreadFactory
+import space.votebot.bot.util.InfluxDBConnection
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 /**
  * GuildCountMetrics posts the number of Guilds to InfluxDB.
- * @param client the [InfluxDBClient]
- * @param bucket the InfluxDB bucket to post stats to
- * @param org the InfluxDB org to post stats to
+ * @param influx the [InfluxDBConnection]
  */
-class GuildCountMetrics(private val shardManager: ShardManager, private val client: InfluxDBClient, private val bucket: String, private val org: String) {
+class GuildCountMetrics(private val shardManager: ShardManager, private val influx: InfluxDBConnection) {
 
     private val log = KotlinLogging.logger { }
 
@@ -32,7 +30,7 @@ class GuildCountMetrics(private val shardManager: ShardManager, private val clie
      */
     suspend fun start() {
         for (unit in scheduler) {
-            client.writeApi.writePoint(bucket, org, Point.measurement("guilds").apply {
+            influx.writePoint(Point.measurement("guilds").apply {
                 addField("count", shardManager.guilds.size)
                 time(Instant.now().toEpochMilli(), WritePrecision.MS)
             })

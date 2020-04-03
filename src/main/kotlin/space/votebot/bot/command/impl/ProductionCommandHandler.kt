@@ -8,7 +8,6 @@ import space.votebot.bot.dsl.editMessage
 import space.votebot.bot.dsl.sendMessage
 import space.votebot.bot.event.EventSubscriber
 import space.votebot.bot.events.CommandErrorEvent
-import space.votebot.bot.events.CommandExecutedEvent
 import space.votebot.bot.util.HastebinUtil
 import space.votebot.bot.util.stringify
 import java.time.LocalDateTime
@@ -17,9 +16,6 @@ import kotlin.coroutines.CoroutineContext
 class ProductionCommandHandler(private val errorReportChannel: Long) {
 
     private val logger = KotlinLogging.logger {}
-
-    @EventSubscriber
-    fun commandExecuted(event: CommandExecutedEvent) = logger.info { "${event.context.command.displayName} was executed by ${event.author.asTag}" }
 
     @EventSubscriber
     fun commandErrored(event: CommandErrorEvent) {
