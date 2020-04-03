@@ -100,8 +100,8 @@ class CommandClientImpl(
                     processCommand(command, context)
                     val t2 = Instant.now()
                     GlobalScope.launch {
-                        println(parent?.name ?: command.name)
                         bot.influx.writePoint(Point.measurement("commands_executed")
+                                .addTag("command", parent?.name ?: command.name)
                                 .addField("duration", t2.minusMillis(t1.toEpochMilli()).toEpochMilli())
                                 .addField("count", commandCounter.incrementAndGet())
                         )
@@ -124,21 +124,22 @@ class CommandClientImpl(
         tailrec fun findCommand(
                 arguments: Arguments,
                 associations: Map<String, AbstractCommand>,
-                command: AbstractCommand? = null
+                command: AbstractCommand? = null,
+                rootCommand: AbstractCommand? = null
         ): CommandContainer? {
             // Get invoke
             val invoke = arguments.first()
             // Search command associated with invoke or return previously found command
             val foundCommand = associations[invoke]
-                    ?: return command?.let { CommandContainer(it, arguments) }
+                    ?: return command?.let { CommandContainer(it, arguments, rootCommand) }
             // Cut off invoke
             val newArgs = Arguments(arguments.drop(1), raw = arguments.join().substring(invoke.length).trim())
             // Look for sub commands
             if (foundCommand.hasSubCommands() and newArgs.isNotEmpty()) {
-                return findCommand(newArgs, foundCommand.commandAssociations, foundCommand)
+                return findCommand(newArgs, foundCommand.commandAssociations, foundCommand, rootCommand ?: foundCommand)
             }
             // Return command if now sub-commands were found
-            return CommandContainer(foundCommand, newArgs)
+            return CommandContainer(foundCommand, newArgs, rootCommand)
         }
 
         return findCommand(Arguments(input.trim().split(delimiter), raw = input), commandAssociations)
@@ -159,4 +160,4 @@ class CommandClientImpl(
     }
 }
 
-private data class CommandContainer(val command: AbstractCommand, val args: Arguments, val parent: AbstractCommand? = null)
+private data class CommandContainer(val command: AbstractCommand, val args: Arguments, val parent: AbstractCommand?)

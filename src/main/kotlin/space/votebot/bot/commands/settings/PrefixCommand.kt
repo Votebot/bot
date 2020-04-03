@@ -59,7 +59,6 @@ class PrefixCommand : AbstractCommand() {
         override val displayName: String = "toggle-default"
         override val description: String = "Toggles the default (`${Constants.prefix}`) prefix. (Only works if you have set a custom prefix)"
         override val usage: String = ""
-
         override suspend fun execute(context: Context) {
             val guild = transaction { VoteBotGuild.findByGuildIdOrNew(context.guild.idLong) }
             if (guild.prefix == Constants.prefix && !guild.disableDefaultPrefix) {
