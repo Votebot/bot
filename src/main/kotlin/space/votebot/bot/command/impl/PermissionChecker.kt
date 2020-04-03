@@ -15,6 +15,7 @@ class PermissionChecker : PermissionHandler {
         return isPrivileged(executor)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun isPrivileged(executor: Member): Boolean {
         return false //TODO: Implement privileged system.
     }
