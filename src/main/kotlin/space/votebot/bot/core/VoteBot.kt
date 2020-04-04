@@ -12,4 +12,5 @@ interface VoteBot {
     val debugMode: Boolean
     val commandClient: CommandClient
     val influx: InfluxDBConnection
+    val gameAnimator: GameAnimator
 }

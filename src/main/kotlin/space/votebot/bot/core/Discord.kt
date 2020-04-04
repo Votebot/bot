@@ -10,10 +10,11 @@ import net.dv8tion.jda.api.sharding.ShardManager
 import okhttp3.OkHttpClient
 import space.votebot.bot.event.EventSubscriber
 import space.votebot.bot.events.AllShardsReadyEvent
+import space.votebot.bot.events.ShardWatcher
 
 private val restActionLogger = KotlinLogging.logger("RestActions")
 
-class Discord(discordToken: String, httpClient: OkHttpClient, eventManager: IEventManager) {
+class Discord(discordToken: String, httpClient: OkHttpClient, eventManager: IEventManager, private val bot: VoteBot) {
 
     val log = KotlinLogging.logger {}
 
@@ -22,7 +23,7 @@ class Discord(discordToken: String, httpClient: OkHttpClient, eventManager: IEve
             .setHttpClient(httpClient)
             .setStatus(OnlineStatus.DO_NOT_DISTURB)
             .setActivity(Activity.playing("Starting ..."))
-            .addEventListeners(this)
+            .addEventListeners(this, ShardWatcher(bot))
             .build()
 
     init {
@@ -34,5 +35,6 @@ class Discord(discordToken: String, httpClient: OkHttpClient, eventManager: IEve
     @EventSubscriber
     fun whenReady(event: AllShardsReadyEvent) {
         log.info { "Bot initialized!" }
+        bot.gameAnimator.start()
     }
 }

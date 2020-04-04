@@ -126,7 +126,7 @@ class AnnotatedEventManager(
                     it.call(event)
                 }
             }
-            if (eventType == GenericEvent::class || !callParents) {
+            if (eventType != GenericEvent::class && callParents) {
                 callEvent(eventType.superclasses.first())
             }
         }

@@ -26,21 +26,23 @@ import space.votebot.bot.metrics.MemoryMetrics
 import space.votebot.bot.util.DefaultInfluxDBConnection
 import space.votebot.bot.util.InfluxDBConnection
 import space.votebot.bot.util.NopInfluxDBConnection
+import kotlin.contracts.contract
 
 class VoteBotImpl(private val config: Config) : VoteBot {
 
-    private val log = KotlinLogging.logger { }
     private val dataSource: HikariDataSource
     override val influx: InfluxDBConnection
     override val eventManager: IEventManager = AnnotatedEventManager()
     override val httpClient: OkHttpClient = OkHttpClient()
     override val discord: Discord
     override val debugMode = config.environment.debug
+    override val gameAnimator: GameAnimator
     override val commandClient: CommandClient = CommandClientImpl(this, Constants.prefix)
 
     init {
         dataSource = initDatabase()
-        discord = Discord(config.discordToken, httpClient, eventManager)
+        discord = Discord(config.discordToken, httpClient, eventManager, this)
+        gameAnimator = GameAnimator(discord, config)
 
         influx = if (config.environment.debug && config.enableMetrics || config.environment.debug && !config.enableMetrics) {
             DefaultInfluxDBConnection(InfluxDBClientFactory.create(config.influxDbAddress, config.influxDbToken.toCharArray()), config.influxDbBucket, config.influxDbOrg)
