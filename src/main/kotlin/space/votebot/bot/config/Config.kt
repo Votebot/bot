@@ -79,6 +79,11 @@ class Config {
      */
     val dbPassword: String = dotenv["${PREFIX}DB_PASSWORD"] ?: "postgres"
 
+    /**
+     * The database password.
+     */
+    val rawGameAnimatorGames: List<String> = (dotenv["${PREFIX}GAMES"] ?: "No games").split(',')
+
     companion object {
         private const val PREFIX = "BOT_"
     }

@@ -22,7 +22,7 @@ object EntityResolver {
      * @return the resolved [Role] or `null` if none was found
      */
     fun resolveRole(guild: Guild, input: String, ignoreCase: Boolean = false): Role? =
-        resolveEntity(input, MentionType.ROLE, guild::getRoleById, guild::getRolesByName, ignoreCase)
+            resolveEntity(input, MentionType.ROLE, guild::getRoleById, guild::getRolesByName, ignoreCase)
 
     /**
      * Resolves a [TextChannel] by its mention, id, or name.
@@ -33,7 +33,7 @@ object EntityResolver {
      * @return the resolved [TextChannel] or `null` if none was found
      */
     fun resolveTextChannel(guild: Guild, input: String, ignoreCase: Boolean = false): TextChannel? =
-        resolveEntity(input, MentionType.CHANNEL, guild::getTextChannelById, guild::getTextChannelsByName, ignoreCase)
+            resolveEntity(input, MentionType.CHANNEL, guild::getTextChannelById, guild::getTextChannelsByName, ignoreCase)
 
     /**
      * Resolves a [User] by its mention, id, or name.
@@ -44,7 +44,7 @@ object EntityResolver {
      * @return the resolved [User] or `null` if none was found
      */
     fun resolveUser(jda: JDA, input: String, ignoreCase: Boolean = false): User? =
-        resolveEntity(input, MentionType.USER, jda::getUserById, jda::getUsersByName, ignoreCase)
+            resolveTaggable(input, jda::getUserById, jda::getUsersByName, ignoreCase, jda::getUserByTag)
 
     /**
      * Resolves a [Member] by its mention, id, or name.
@@ -55,14 +55,20 @@ object EntityResolver {
      * @return the resolved [Member] or `null` if none was found
      */
     fun resolveMember(guild: Guild, input: String, ignoreCase: Boolean = false): Member? =
-        resolveEntity(input, MentionType.USER, guild::getMemberById, guild::getMembersByName, ignoreCase)
+            resolveTaggable(input, guild::getMemberById, guild::getMembersByName, ignoreCase, guild::getMemberByTag)
+
+    private fun <T : IMentionable> resolveTaggable(input: String,
+                                                   idResolver: (String) -> T?,
+                                                   nameResolver: (String, Boolean) -> Collection<T>,
+                                                   ignoreCase: Boolean = false, tagResolver: (String) -> T?) = resolveEntity(input, MentionType.USER, idResolver, nameResolver, ignoreCase)
+            ?: tagResolver(input)
 
     private fun <T : IMentionable> resolveEntity(
-        input: String,
-        type: MentionType,
-        idResolver: (String) -> T?,
-        nameResolver: (String, Boolean) -> Collection<T>,
-        ignoreCase: Boolean = false
+            input: String,
+            type: MentionType,
+            idResolver: (String) -> T?,
+            nameResolver: (String, Boolean) -> Collection<T>,
+            ignoreCase: Boolean = false
     ): T? {
         require(input.isNotBlank()) { "Input string cannot be blank" }
         val matcher = type.pattern.matcher(input)

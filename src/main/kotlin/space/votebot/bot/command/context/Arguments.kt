@@ -1,12 +1,10 @@
-
-
 package space.votebot.bot.command.context
 
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.entities.*
 import space.votebot.bot.constants.Embeds
 import space.votebot.bot.dsl.EmbedConvention
 import space.votebot.bot.util.EntityResolver
-import net.dv8tion.jda.api.JDA
-import net.dv8tion.jda.api.entities.*
 
 /**
  * A converter that converts a command argument.
@@ -22,10 +20,10 @@ typealias ArgumentConverter<T> = (String) -> T
  */
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 data class Arguments(
-    private val list: List<String>,
-    private val raw: String
+        private val list: List<String>,
+        private val raw: String
 ) :
-    List<String> by list {
+        List<String> by list {
 
     /**
      * Joins the arguments back to their original String.
@@ -59,32 +57,39 @@ data class Arguments(
      * @param ignoreCase whether the case of the name should be ignored or not
      */
     fun optionalUser(index: Int, ignoreCase: Boolean = false, jda: JDA): User? =
-        optionalArgument(index) { EntityResolver.resolveUser(jda, it, ignoreCase) }
+            optionalArgument(index) { EntityResolver.resolveUser(jda, it, ignoreCase) }
 
     /**
      * Return the argument at the specified [index] as a [Member] or `null` if there is no argument at that position, or it is not a [Member].
      * @param ignoreCase whether the case of the name should be ignored or not
      */
     fun optionalMember(index: Int, ignoreCase: Boolean = false, guild: Guild): Member? =
-        optionalArgument(index) { EntityResolver.resolveMember(guild, it, ignoreCase) }
+            optionalArgument(index) { EntityResolver.resolveMember(guild, it, ignoreCase) }
 
     /**
      * Return the argument at the specified [index] as a [Role] or `null` if there is no argument at that position, or it is not a [Role].
      * @param ignoreCase whether the case of the name should be ignored or not
      */
     fun optionalRole(index: Int, ignoreCase: Boolean = false, guild: Guild): Role? =
-        optionalArgument(index) { EntityResolver.resolveRole(guild, it, ignoreCase) }
+            optionalArgument(index) { EntityResolver.resolveRole(guild, it, ignoreCase) }
+
+    /**
+     * Return the argument at the specified [index] as a [T] or `null` if there is no argument at that position, or it is not a [T].
+     */
+    inline fun <reified T : Enum<T>> optionalEnum(index: Int): T? = optionalArgument(index) {
+        java.lang.Enum.valueOf(T::class.java, it)
+    }
 
     /**
      * Return the argument at the specified [index] as a [TextChannel] or `null` if there is no argument at that position, or it is not a [TextChannel].
      * @param ignoreCase whether the case of the name should be ignored or not
      */
     fun optionalChannel(
-        index: Int,
-        ignoreCase: Boolean = false,
-        guild: Guild
+            index: Int,
+            ignoreCase: Boolean = false,
+            guild: Guild
     ): TextChannel? =
-        optionalArgument(index) { EntityResolver.resolveTextChannel(guild, it, ignoreCase) }
+            optionalArgument(index) { EntityResolver.resolveTextChannel(guild, it, ignoreCase) }
 
     /**
      * Return the argument at the specified [index] or `null` if there is no argument at that position.
@@ -92,9 +97,9 @@ data class Arguments(
      * @param context the context that executed the command
      */
     fun requiredArgument(index: Int, context: Context): String? =
-        requiredArgument(index, context, this::optionalArgument) {
-            Embeds.command(context.command)
-        }
+            requiredArgument(index, context, this::optionalArgument) {
+                Embeds.command(context.command)
+            }
 
     /**
      * Return the argument at the specified [index] as an [Int] or `null` if there is no argument at that position.
@@ -103,8 +108,8 @@ data class Arguments(
      */
     fun int(index: Int, context: Context): Int? = requiredArgument(index, context, this::optionalInt) {
         Embeds.error(
-            "Ungültiger Zahlenwert!",
-            "Bitte gebe einen gültigen Zahlenwert an"
+                "Invalid Number!",
+                "Please enter a valid number."
         )
     }
 
@@ -115,8 +120,8 @@ data class Arguments(
      */
     fun long(index: Int, context: Context): Long? = requiredArgument(index, context, this::optionalLong) {
         Embeds.error(
-            "Ungültiger Zahlenwert!",
-            "Bitte gebe einen gültigen Zahlenwert an"
+                "Invalid Number!",
+                "Please enter a valid number."
         )
     }
 
@@ -127,9 +132,9 @@ data class Arguments(
      * @param context the context that executed the command
      */
     fun user(index: Int, ignoreCase: Boolean = false, context: Context): User? =
-        requiredArgument(index, context, { optionalUser(index, ignoreCase, context.jda) }) {
-            Embeds.error("Ungültiger Benutzer!", "Der von dir angegebene Benutzer scheint nicht zu existieren.")
-        }
+            requiredArgument(index, context, { optionalUser(index, ignoreCase, context.jda) }) {
+                Embeds.error("Invalid User", "There seems to be no user with that name.")
+            }
 
     /**
      * Return the argument at the specified [index] as a [Member] or `null` if there is no argument at that position.
@@ -138,9 +143,9 @@ data class Arguments(
      * @param context the context that executed the command
      */
     fun member(index: Int, ignoreCase: Boolean = false, context: Context): Member? =
-        requiredArgument(index, context, { optionalMember(index, ignoreCase, context.guild) }) {
-            Embeds.error("Ungültiger Benutzer!", "Der von dir angegebene Benutzer scheint nicht zu existieren.")
-        }
+            requiredArgument(index, context, { optionalMember(index, ignoreCase, context.guild) }) {
+                Embeds.error("Invalid User", "There seems to be no user with that name.")
+            }
 
     /**
      * Return the argument at the specified [index] as a [Role] or `null` if there is no argument at that position.
@@ -149,9 +154,9 @@ data class Arguments(
      * @param context the context that executed the command
      */
     fun role(index: Int, ignoreCase: Boolean = false, context: Context): Role? =
-        requiredArgument(index, context, { optionalRole(index, ignoreCase, context.guild) }) {
-            Embeds.error("Ungültige Rolle!", "Die von dir angegebene Rolle scheint nicht zu existieren.")
-        }
+            requiredArgument(index, context, { optionalRole(index, ignoreCase, context.guild) }) {
+                Embeds.error("Invalid Role!", "There seems to be no Role with that name.")
+            }
 
     /**
      * Return the argument at the specified [index] as a [TextChannel] or `null` if there is no argument at that position.
@@ -160,18 +165,24 @@ data class Arguments(
      * @param context the context that executed the command
      */
     fun channel(index: Int, ignoreCase: Boolean = false, context: Context): TextChannel? =
-        requiredArgument(index, context, { optionalChannel(index, ignoreCase, context.guild) }) {
-            Embeds.error("Ungültige Text-Kanal!", "Der von dir angegebene Text-Kanal scheint nicht zu existieren.")
-        }
+            requiredArgument(index, context, { optionalChannel(index, ignoreCase, context.guild) }) {
+                Embeds.error("Invalid Channel!", "There seems to be no channel with chat name.")
+            }
 
-    private fun <T> optionalArgument(index: Int, transform: ArgumentConverter<T>): T? =
-        optionalArgument(index)?.let(transform)
+    inline fun <reified T : Enum<T>> enum(index: Int, context: Context): T? = requiredArgument(index, context, {
+        optionalEnum<T>(index)
+    }, {
+        Embeds.error("Invalid option!", "Please choose from one of the following options: `${T::class.java.enumConstants.joinToString("`", "`, `", "`")}`")
+    })
 
-    private fun <T> requiredArgument(
-        index: Int,
-        context: Context,
-        provider: (Int) -> T?,
-        lazyError: () -> EmbedConvention
+    fun <T> optionalArgument(index: Int, transform: ArgumentConverter<T>): T? =
+            optionalArgument(index)?.let(transform)
+
+    fun <T> requiredArgument(
+            index: Int,
+            context: Context,
+            provider: (Int) -> T?,
+            lazyError: () -> EmbedConvention
     ): T? {
         val found = provider(index)
         if (found == null) context.respond(lazyError()).queue()
