@@ -14,6 +14,7 @@ import space.votebot.bot.command.permission.Permission
  * @property commandAssociations all alias-command associations of sub-commands
  * @property category the [CommandCategory] of the command
  * @property callback an [Exception] that is supposed to highlight class defention line
+ * @property exampleUsage an example how to use the command
  */
 abstract class AbstractCommand : CommandRegistry<AbstractSubCommand> {
     open val callback: Exception = Exception()
@@ -28,7 +29,8 @@ abstract class AbstractCommand : CommandRegistry<AbstractSubCommand> {
     abstract val usage: String
     abstract val permission: Permission
     abstract val category: CommandCategory
-
+    open val exampleUsage: String
+        get() = ""
     /**
      * Invokes the command.
      * @param context the [Context] in which the command is invoked

@@ -79,7 +79,8 @@ object Embeds {
     fun command(command: AbstractCommand): EmbedConvention {
         return info("${command.displayName} - Help", command.description) {
             addField("Aliases", command.aliases.joinToString(prefix = "`", separator = "`, `", postfix = "`"))
-            addField("Usage", formatCommandUsage(command))
+            addField("Usage", formatCommandUsage(command, command.usage))
+            addField("Example Usage", formatCommandUsage(command, command.exampleUsage))
             addField("Permission", command.permission.name)
             val subCommands = command.registeredCommands.map(::formatSubCommandUsage)
             if (subCommands.isNotEmpty()) {
@@ -88,8 +89,8 @@ object Embeds {
         }
     }
 
-    private fun formatCommandUsage(command: AbstractCommand): String =
-        "${Constants.prefix}${command.name} ${command.usage}"
+    private fun formatCommandUsage(command: AbstractCommand, usage: String): String =
+        "${Constants.prefix}${command.name} $usage"
 
     private fun formatSubCommandUsage(command: AbstractSubCommand): String {
         val builder = StringBuilder(Constants.prefix)
