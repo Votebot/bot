@@ -39,7 +39,7 @@ class VoteBotImpl(private val config: Config) : VoteBot {
     override val discord: Discord
     override val debugMode = config.environment.debug
     override val gameAnimator: GameAnimator
-    override val commandClient: CommandClient = CommandClientImpl(this, Constants.prefix)
+    override val commandClient: CommandClient = CommandClientImpl(this, Config.defaultPrefix)
 
     init {
         dataSource = initDatabase()
@@ -77,7 +77,7 @@ class VoteBotImpl(private val config: Config) : VoteBot {
         coroutineScope {
             // If metrics are disabled we usually just pass the no-op InfluxDBConnection. But as these are constantly
             // running we do this double check here.
-            if (config.environment.debug && config.enableMetrics || config.environment.debug && !config.enableMetrics) {
+            if (config.environment.debug && config.enableMetrics || !config.environment.debug && config.enableMetrics) {
                 launch { MemoryMetrics(influx).start() }
                 launch { DatabaseMetrics(dataSource, influx).start() }
                 launch { GuildCountMetrics(discord.shardManager, influx).start() }

@@ -15,6 +15,7 @@ class PrefixCommand : AbstractCommand() {
     override val displayName: String = "prefix"
     override val description: String = "Configure the bot's prefix."
     override val usage: String = "<prefix>"
+    override val exampleUsage: String = "v?"
     override val permission: Permission = Permission.ADMIN
     override val category: CommandCategory = CommandCategory.SETTINGS
 

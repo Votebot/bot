@@ -6,7 +6,6 @@ import io.sentry.Sentry
 import org.slf4j.LoggerFactory
 import space.votebot.bot.config.Config
 import space.votebot.bot.config.Environment
-import javax.swing.JFrame
 import space.votebot.bot.core.VoteBotImpl as VoteBot
 
 suspend fun main() {
