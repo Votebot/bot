@@ -15,6 +15,9 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.KType
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.*
+import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
+import kotlin.reflect.jvm.javaType
+import kotlin.reflect.jvm.jvmErasure
 
 /**
  * @see SubscribeEvent
@@ -53,7 +56,7 @@ class AnnotatedEventManager(
     /**
      * @see IEventManager.register
      */
-    override fun register(listener: Any): Unit = if (this.listeners.add(listeners)) {
+    override fun register(listener: Any): Unit = if (this.listeners.add(listener)) {
         addMethods(listener)
     } else Unit
 
@@ -88,7 +91,16 @@ class AnnotatedEventManager(
         require(parameters.size == 1) {
             "EventSubscriber functions must have exactly one parameter (the event)"
         }
-        val eventType = parameters.first().type
+
+        val type = parameters.first().type
+        val eventType = try {
+            type.jvmErasure
+            type
+        } catch (e: KotlinReflectionInternalError) {
+            // For some reasons Kotlin reflection fails finding reified types but java reflection does
+            val name = type.javaType.typeName
+            Class.forName(name).kotlin.starProjectedType
+        }
         require(eventType.isSubtypeOf(GenericEvent::class.starProjectedType)) { "EventSubscriber parameter must be a subclass of Event" }
         return eventType
     }

@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
+import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
@@ -24,6 +25,7 @@ import space.votebot.bot.events.CommandNoPermissionEvent
 import space.votebot.bot.util.DefaultThreadFactory
 import space.votebot.bot.util.asMention
 import space.votebot.bot.util.hasSubCommands
+import space.votebot.bot.util.iHavePermission
 import java.time.Duration
 import java.time.Instant
 import java.time.OffsetDateTime
@@ -72,6 +74,16 @@ class CommandClientImpl(
     fun onMessage(event: GuildMessageReceivedEvent) = dispatchCommand(event.message, event.responseNumber)
 
     private fun dispatchCommand(message: Message, responseNumber: Long) {
+        if (!message.textChannel.iHavePermission(Permission.MESSAGE_WRITE)) {
+            return message.author.openPrivateChannel().map {
+                it.sendMessage("Hey! It seems like I don't have the `MESSAGE_WRITE` permission in ${message.textChannel.asMention}. Please make sure that I have those permissions or try in another channel.")
+            }.queue()
+        }
+
+        if (!message.textChannel.iHavePermission(Permission.MESSAGE_EMBED_LINKS)) {
+            return message.channel.sendMessage("Hey it looks like I don't have the `MESSAGE_EMBED_LINKS` permission in ${message.textChannel.asMention}. Please make sure that I have those permissions or try in another channel.").queue()
+        }
+
         val author = message.author
 
         if (message.isWebhookMessage or author.isBot or author.isFake) return
@@ -80,12 +92,13 @@ class CommandClientImpl(
     }
 
     private fun parseCommand(message: Message, responseNumber: Long) {
-        val rawInput = message.contentRaw
+        val rawInput = message.contentRaw.toLowerCase()
         val prefix = resolvePrefix(message.guild, rawInput) ?: return
 
         val nonPrefixedInput = rawInput.substring(prefix).trim()
 
-        val (command, arguments, parent) = resolveCommand(nonPrefixedInput) ?: return // No command found
+        val (command, arguments, parent) = resolveCommand(nonPrefixedInput)
+                ?: return // No command found
 
         message.textChannel.sendTyping() // since rest actions are async, we need to wait for send typing to succeed
                 .queue(fun(_: Void?) { // Since Void has a private constructor JDA passes in null, so it has to be nullable even if it is not used
@@ -124,8 +137,8 @@ class CommandClientImpl(
         tailrec fun findCommand(
                 arguments: Arguments,
                 associations: Map<String, AbstractCommand>,
-                command: AbstractCommand? = null,
-                rootCommand: AbstractCommand? = null
+                command: AbstractCommand?,
+                rootCommand: AbstractCommand?
         ): CommandContainer? {
             // Get invoke
             val invoke = arguments.first()
@@ -136,13 +149,14 @@ class CommandClientImpl(
             val newArgs = Arguments(arguments.drop(1), raw = arguments.join().substring(invoke.length).trim())
             // Look for sub commands
             if (foundCommand.hasSubCommands() and newArgs.isNotEmpty()) {
-                return findCommand(newArgs, foundCommand.commandAssociations, foundCommand, rootCommand ?: foundCommand)
+                return findCommand(newArgs, foundCommand.commandAssociations, foundCommand, rootCommand
+                        ?: foundCommand)
             }
             // Return command if now sub-commands were found
             return CommandContainer(foundCommand, newArgs, rootCommand)
         }
 
-        return findCommand(Arguments(input.trim().split(delimiter), raw = input), commandAssociations)
+        return findCommand(Arguments(input.trim().split(delimiter), raw = input), commandAssociations, null, null)
     }
 
     private fun resolvePrefix(guild: Guild, content: String): Int? {
