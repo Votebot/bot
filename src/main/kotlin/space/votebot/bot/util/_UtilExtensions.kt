@@ -4,6 +4,7 @@ import kotlinx.coroutines.future.await
 import space.votebot.bot.command.AbstractCommand
 import mu.KotlinLogging
 import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.requests.RestAction
 import net.dv8tion.jda.api.utils.data.DataObject
 import okhttp3.Call
@@ -12,6 +13,8 @@ import okhttp3.Response
 import java.io.IOException
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.time.Duration
+import java.time.temporal.TemporalUnit
 import java.util.concurrent.CompletableFuture
 
 private val httpLogger = KotlinLogging.logger("HttpClient")
@@ -90,3 +93,17 @@ class MapJsonObject(map: Map<String, Any>) : DataObject(map)
  * Awaits the completion of a rest action
  */
 suspend fun <T> RestAction<T>.await(): T = submit().await()
+
+/**
+ * Sends a message and deletes it after a [delay].
+ *
+ * @see Message.delete
+ */
+fun RestAction<Message>.delete(delay: Duration) = delay(delay).flatMap(Message::delete).queue()
+
+/**
+ * Sends a message and deletes it after a [time] in [unit].
+ *
+ * @see delete
+ */
+fun RestAction<Message>.delete(time: Long, unit: TemporalUnit) = delete(Duration.of(time, unit))

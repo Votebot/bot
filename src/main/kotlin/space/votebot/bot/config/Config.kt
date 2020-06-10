@@ -6,11 +6,14 @@ import io.github.cdimascio.dotenv.dotenv
 /**
  * Configuration for this service.
  */
-class Config {
+object Config {
 
     private val dotenv = dotenv {
         ignoreIfMissing = true
     }
+
+
+    private const val PREFIX = "BOT_"
 
     /**
      * The [Level] of the logger.
@@ -82,9 +85,12 @@ class Config {
     /**
      * The database password.
      */
-    val rawGameAnimatorGames: List<String> = (dotenv["${PREFIX}GAMES"] ?: "No games").split(',')
+    val rawGameAnimatorGames: List<String> = dotenv["${PREFIX}GAMES"]?.run { split(',') }
+            ?: listOf("No games")
 
-    companion object {
-        private const val PREFIX = "BOT_"
-    }
+    /**
+     * The default prefix
+     */
+    val defaultPrefix: String = dotenv["${PREFIX}DEFAULT_PREFIX"] ?: "v!"
+
 }

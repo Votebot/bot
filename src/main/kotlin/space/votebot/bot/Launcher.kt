@@ -6,20 +6,20 @@ import io.sentry.Sentry
 import org.slf4j.LoggerFactory
 import space.votebot.bot.config.Config
 import space.votebot.bot.config.Environment
+import javax.swing.JFrame
 import space.votebot.bot.core.VoteBotImpl as VoteBot
 
 suspend fun main() {
-    val cfg = Config()
-    val logLevel = Level.valueOf(cfg.logLevel)
+    val logLevel = Level.valueOf(Config.logLevel)
 
     val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as Logger
     rootLogger.level = logLevel
 
-    if (cfg.environment != Environment.DEVELOPMENT) {
-        Sentry.init(cfg.sentryDSN)
+    if (Config.environment != Environment.DEVELOPMENT) {
+        Sentry.init(Config.sentryDSN)
     } else {
         Sentry.init()
     }
 
-    VoteBot(cfg).start()
+    VoteBot(Config).start()
 }

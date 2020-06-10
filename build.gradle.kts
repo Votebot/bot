@@ -36,7 +36,7 @@ dependencies {
     testImplementation("io.ktor", "ktor-server-tests", "1.3.2")
 
     // JDA
-    implementation("net.dv8tion", "JDA", "4.1.1_127") {
+    implementation("net.dv8tion", "JDA", "4.1.1_131") {
         exclude(module = "opus-java")
     }
 
@@ -62,8 +62,8 @@ dependencies {
     testImplementation("org.jetbrains.kotlin", "kotlin-test-junit5", "1.3.71")
     testImplementation("org.mockito", "mockito-core", "3.3.3")
     testImplementation("com.nhaarman.mockitokotlin2", "mockito-kotlin", "2.2.0")
-    testImplementation("io.zonky.test", "embedded-postgres", "1.2.6")
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.6.0")
+    testImplementation("com.h2database", "h2", "1.4.200")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.6.0")
 }
 
@@ -75,6 +75,13 @@ application {
 
 tasks {
     compileKotlin {
+        kotlinOptions {
+            jvmTarget = "12"
+            freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
+        }
+    }
+
+    compileTestKotlin {
         kotlinOptions {
             jvmTarget = "12"
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"

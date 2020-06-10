@@ -1,18 +1,40 @@
-/*
+import com.nhaarman.mockitokotlin2.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.entities.*
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.hooks.IEventManager
+import net.dv8tion.jda.api.requests.RestAction
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
+import space.votebot.bot.command.AbstractCommand
+import space.votebot.bot.command.AbstractSubCommand
+import space.votebot.bot.command.CommandCategory
+import space.votebot.bot.command.context.Context
+import space.votebot.bot.command.impl.CommandClientImpl
+import space.votebot.bot.command.permission.Permission
+import space.votebot.bot.constants.Constants
+import space.votebot.bot.core.VoteBot
+import space.votebot.bot.database.VoteBotGuilds
+import space.votebot.bot.event.AnnotatedEventManager
+import space.votebot.bot.event.EventSubscriber
+import space.votebot.bot.events.CommandErrorEvent
+import space.votebot.bot.util.NopInfluxDBConnection
+import space.votebot.bot.util.asMention
+import java.util.concurrent.CompletableFuture
+import java.util.function.BooleanSupplier
+import java.util.function.Consumer
+
 class CommandTest {
 
-    @BeforeTest
-    fun connectDB() {
-        Database.connect(EmbeddedPostgres.start().postgresDatabase)
-        transaction {
-            SchemaUtils.createMissingTablesAndColumns(VoteBotGuilds)
-        }
-    }
-
     @Test
-    suspend fun `check prefixed normal command`() {
+    fun `check prefixed normal command`() {
         val message = mockMessage {
-            on { contentRaw }.thenReturn("v!test ${arguments.joinToString(" ")}")
+            on { contentRaw }.thenReturn("v!test ${arguments.joinToString(" ")}".mock())
         }
 
         val command = mockCommand {
@@ -23,10 +45,10 @@ class CommandTest {
     }
 
     @Test
-    suspend fun `check mentioned normal command`() {
+    fun `check mentioned normal command`() {
         val mention = selfMember.asMention()
         val message = mockMessage {
-            on { contentRaw }.thenReturn("$mention test ${arguments.joinToString(" ")}")
+            on { contentRaw }.thenReturn("$mention test ${arguments.joinToString(" ")}".mock())
         }
 
         val command = mockCommand {
@@ -37,9 +59,9 @@ class CommandTest {
     }
 
     @Test
-    suspend fun `check prefixed sub command`() {
+    fun `check prefixed sub command`() {
         val message = mockMessage {
-            on { contentRaw }.thenReturn("v!test ${arguments.joinToString(" ")}")
+            on { contentRaw }.thenReturn("v!test ${arguments.joinToString(" ")}".mock())
         }
 
         val subCommand = mock<AbstractSubCommand> {
@@ -55,10 +77,10 @@ class CommandTest {
     }
 
     @Test
-    suspend fun `check mentioned sub command`() {
+    fun `check mentioned sub command`() {
         val mention = selfMember.asMention()
         val message = mockMessage {
-            on { contentRaw }.thenReturn("$mention test ${arguments.joinToString(" ")}")
+            on { contentRaw }.thenReturn("$mention test ${arguments.joinToString(" ")}".mock())
         }
 
         val subCommand = mock<AbstractSubCommand> {
@@ -95,7 +117,7 @@ class CommandTest {
         val listener: Validator = mock()
         eventManager.register(listener)
         val message = mockMessage {
-            on { contentRaw }.thenReturn("v!test ${arguments.joinToString(" ")}")
+            on { contentRaw }.thenReturn("v!test ${arguments.joinToString(" ")}".mock())
         }
         val event = GuildMessageReceivedEvent(jda, 200, message)
 
@@ -112,7 +134,7 @@ class CommandTest {
         fun onError(event: CommandErrorEvent)
     }
 
-    private suspend fun ensureCommandCall(
+    private fun ensureCommandCall(
             message: Message,
             command: AbstractCommand,
             arguments: List<String>,
@@ -122,13 +144,15 @@ class CommandTest {
         client.registerCommands(command)
         client.onMessage(event)
         val actualCommand = subCommand ?: command
-        verify(actualCommand).execute(argThat {
-            arguments == args.toList() &&
-                    client === this.commandClient &&
-                    message === this.message &&
-                    bot === this.bot &&
-                    author === this.author
-        })
+        runBlocking {
+            verify(actualCommand).execute(argThat {
+                arguments == args.toList() &&
+                        client === this.commandClient &&
+                        message === this.message &&
+                        bot === this.bot &&
+                        author === this.author
+            })
+        }
     }
 
     private fun mockMessage(
@@ -167,6 +191,16 @@ class CommandTest {
         @BeforeAll
         @JvmStatic
         @Suppress("unused")
+        fun `setup database`() {
+            Database.connect("jdbc:h2:~/tmp/test.db", driver = "org.h2.Driver")
+            transaction {
+                SchemaUtils.create(VoteBotGuilds)
+            }
+        }
+
+        @BeforeAll
+        @JvmStatic
+        @Suppress("unused")
         fun `setup mock objects`() {
             bot = mock {
                 on { this.influx }.thenReturn(influx)
@@ -174,14 +208,18 @@ class CommandTest {
             }
             client = CommandClientImpl(bot, Constants.prefix, Dispatchers.Unconfined)
             jda = mock()
-            channel = mock {
-                on { sendTyping() }.thenReturn(EmptyRestAction<Void>())
-            }
+
             selfMember = mock {
                 on { id }.thenReturn("123456789")
+                on { hasPermission(any<GuildChannel>(), eq(net.dv8tion.jda.api.Permission.MESSAGE_WRITE)) }.thenReturn(true)
+                on { hasPermission(any<GuildChannel>(), eq(net.dv8tion.jda.api.Permission.MESSAGE_EMBED_LINKS)) }.thenReturn(true)
             }
             guild = mock {
                 on { this.selfMember }.thenReturn(selfMember)
+            }
+            channel = mock {
+                on { sendTyping() }.thenReturn(EmptyRestAction<Void>())
+                on { guild }.thenReturn(guild)
             }
             author = mock {
                 on { isBot }.thenReturn(false)
@@ -191,22 +229,18 @@ class CommandTest {
     }
 }
 
+fun String.mock() = mapIndexed { index, it -> if (index % 2 == 0) it.toUpperCase() else it.toLowerCase() }.joinToString("")
+
 private class EmptyRestAction<T> : RestAction<T> {
-    override fun submit(shouldQueue: Boolean): CompletableFuture<T> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun submit(shouldQueue: Boolean): CompletableFuture<T> = TODO("not implemented")
 
-    override fun complete(shouldQueue: Boolean): T {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun complete(shouldQueue: Boolean): T = TODO("not implemented")
 
-    override fun getJDA(): JDA {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getJDA(): JDA = TODO("not implemented")
 
     override fun queue(success: Consumer<in T?>?, failure: Consumer<in Throwable>?) = success?.accept(null)
             ?: Unit
 
     override fun setCheck(checks: BooleanSupplier?): RestAction<T> = this
 
-}*/
+}
