@@ -98,7 +98,7 @@ data class Arguments(
      */
     fun requiredArgument(index: Int, context: Context): String? =
             requiredArgument(index, context, this::optionalArgument) {
-                Embeds.command(context.command)
+                Embeds.command(context.command, context)
             }
 
     /**

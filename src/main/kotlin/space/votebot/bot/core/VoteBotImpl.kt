@@ -4,7 +4,6 @@ import com.influxdb.client.InfluxDBClientFactory
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import mu.KotlinLogging
 import net.dv8tion.jda.api.hooks.IEventManager
 import okhttp3.OkHttpClient
 import org.jetbrains.exposed.sql.Database
@@ -17,10 +16,12 @@ import space.votebot.bot.command.impl.ProductionCommandHandler
 import space.votebot.bot.commands.general.HelpCommand
 import space.votebot.bot.commands.owner.StatusCommand
 import space.votebot.bot.commands.owner.TestCommand
+import space.votebot.bot.commands.settings.LanguageCommand
 import space.votebot.bot.commands.settings.PrefixCommand
 import space.votebot.bot.config.Config
 import space.votebot.bot.constants.Constants
 import space.votebot.bot.database.VoteBotGuilds
+import space.votebot.bot.database.VoteBotUsers
 import space.votebot.bot.event.AnnotatedEventManager
 import space.votebot.bot.metrics.DatabaseMetrics
 import space.votebot.bot.metrics.GuildCountMetrics
@@ -28,7 +29,6 @@ import space.votebot.bot.metrics.MemoryMetrics
 import space.votebot.bot.util.DefaultInfluxDBConnection
 import space.votebot.bot.util.InfluxDBConnection
 import space.votebot.bot.util.NopInfluxDBConnection
-import kotlin.contracts.contract
 
 class VoteBotImpl(private val config: Config) : VoteBot {
 
@@ -68,7 +68,7 @@ class VoteBotImpl(private val config: Config) : VoteBot {
         }
         Database.connect(dataSource)
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(VoteBotGuilds)
+            SchemaUtils.createMissingTablesAndColumns(VoteBotGuilds, VoteBotUsers)
         }
         return dataSource
     }
@@ -77,7 +77,7 @@ class VoteBotImpl(private val config: Config) : VoteBot {
         coroutineScope {
             // If metrics are disabled we usually just pass the no-op InfluxDBConnection. But as these are constantly
             // running we do this double check here.
-            if (config.environment.debug && config.enableMetrics || config.environment.debug && !config.enableMetrics) {
+            if (config.environment.debug && config.enableMetrics || !config.environment.debug && config.enableMetrics) {
                 launch { MemoryMetrics(influx).start() }
                 launch { DatabaseMetrics(dataSource, influx).start() }
                 launch { GuildCountMetrics(discord.shardManager, influx).start() }
@@ -90,7 +90,8 @@ class VoteBotImpl(private val config: Config) : VoteBot {
                 HelpCommand(),
                 PrefixCommand(),
                 StatusCommand(),
-                TestCommand()
+                TestCommand(),
+                LanguageCommand()
         )
     }
 

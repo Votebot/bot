@@ -12,7 +12,6 @@ import space.votebot.bot.constants.Embeds
 class HelpCommand : AbstractCommand() {
     override val aliases: List<String> = listOf("help", "h")
     override val displayName: String = "help"
-    override val description: String = "Shows a list containing all available commands."
     override val usage: String = "[command]"
     override val permission: Permission = Permission.ANY
     override val category: CommandCategory = CommandCategory.GENERAL
@@ -27,24 +26,21 @@ class HelpCommand : AbstractCommand() {
     }
 
     private fun sendCommandHelpMessage(context: Context, commandName: String) {
+        val translations = context.translations
         val command = context.commandClient.commandAssociations[commandName.toLowerCase()]
                 ?: return context.respond(
                         Embeds.error(
-                                "Command not found!",
-                                "I couldn't find a command with that name"
+                                translations.t("commands.help.not_found.title"),
+                                translations.t("commands.help.not_found.description")
                         )
                 ).queue()
 
-        context.respond(Embeds.command(command)).queue()
+        context.respond(Embeds.command(command, context)).queue()
     }
 
     private fun sendCommandList(context: Context) {
         context.respond(
-                Embeds.info(
-                        "Command-Help", """This is a list of all commands,
-            | in order to learn more about a specific command run `v!help [command]`
-        """.trimMargin()
-                ) {
+                Embeds.info(context.translations.t("commands.help.info")) {
                     val commands = context.commandClient.registeredCommands.filter {
                         context.commandClient.permissionHandler.isCovered(
                                 it.permission,

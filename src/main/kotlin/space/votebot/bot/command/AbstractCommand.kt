@@ -24,7 +24,8 @@ abstract class AbstractCommand : CommandRegistry<AbstractSubCommand> {
     val name: String
         get() = aliases.first()
     abstract val displayName: String
-    abstract val description: String
+    open val description: String
+        get() = "commands.$name.description"
     abstract val usage: String
     abstract val permission: Permission
     abstract val category: CommandCategory

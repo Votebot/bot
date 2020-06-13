@@ -11,11 +11,12 @@ class TestCommand : AbstractCommand() {
     override val aliases: List<String> = listOf("test")
 
     override val displayName: String = "Test"
-    override val description: String = "Secret command for cool people"
     override val usage: String = ""
     override val permission: Permission = Permission.BOT_OWNER
     override val category: CommandCategory = CommandCategory.BOT_OWNER
-    override suspend fun execute(context: Context) = context.sendHelp().queue()
+    override suspend fun execute(context: Context) {
+        context.respond(context.translations.t("key")).queue()
+    }
 
     init {
         registerCommands(PaginatorCommand())

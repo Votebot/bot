@@ -1,0 +1,58 @@
+{
+  "key": "value",
+  "embeds": {
+    "help": {
+      "description": "Description",
+      "aliases": "Aliases",
+      "usage": "Usage",
+      "permission": "Permission",
+      "sub_commands": "Sub commands"
+    }
+  },
+  "commands": {
+    "prefix": {
+      "description": "Configure the bot's prefix.",
+      "too_long": {
+        "title": "Prefix too long!",
+        "description": "The prefix can be a maximum of 5 characters long."
+      },
+      "prefix_updated": {
+        "title": "Prefix updated!",
+        "description": "Updated prefix to `__newPrefix__`"
+      },
+      "reset": {
+        "success": {
+          "title": "Prefix reset!",
+          "description": "Prefix is now again `__prefix__`"
+        }
+      },
+      "toggle": {
+        "not_allowed": {
+          "title": "Not allowed to disable!",
+          "description": "You first have to set a custom prefix in order to disable the default prefix."
+        },
+        "success": {
+          "title": "Toggled default prefix!",
+          "description": ""
+        }
+      }
+    },
+    "language": {
+      "description": "Allows you to change the language of the bot."
+    },
+    "test": {
+      "description": "Secret command for cool people."
+    },
+    "status": {
+      "description": "Allows you to change the bots status."
+    },
+    "help": {
+      "description": "Shows a list containing all available commands.",
+      "not_found": {
+        "title": "Command not found!",
+        "description": "I couldn't find a command with that name"
+      },
+      "info": "Command-Help\", \"\"\"This is a list of all commands,\n            | in order to learn more about a specific command run `v!help [command]`"
+    }
+  }
+}
