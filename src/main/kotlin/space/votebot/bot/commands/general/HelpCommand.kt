@@ -14,6 +14,7 @@ class HelpCommand : AbstractCommand() {
     override val displayName: String = "help"
     override val description: String = "Shows a list containing all available commands."
     override val usage: String = "[command]"
+    override val exampleUsage: String = "help"
     override val permission: Permission = Permission.ANY
     override val category: CommandCategory = CommandCategory.GENERAL
 
