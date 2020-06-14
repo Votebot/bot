@@ -54,8 +54,6 @@ dependencies {
     implementation("io.github.cdimascio", "java-dotenv", "5.1.4")
     implementation("com.squareup.okhttp3", "okhttp", "4.4.0")
     implementation("xyz.downgoon", "snowflake", "1.0.0")
-    implementation(files("libs/i18next-kein-android-all.jar"))
-
 
     // i18next
     implementation("com.i18next", "i18next-kein-android", "1.0")
