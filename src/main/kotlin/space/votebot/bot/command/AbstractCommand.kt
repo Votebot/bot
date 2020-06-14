@@ -1,5 +1,6 @@
 package space.votebot.bot.command
 
+import com.i18next.java.Operation
 import space.votebot.bot.command.context.Context
 import space.votebot.bot.command.permission.Permission
 
@@ -25,7 +26,8 @@ abstract class AbstractCommand : CommandRegistry<AbstractSubCommand> {
     val name: String
         get() = aliases.first()
     abstract val displayName: String
-    abstract val description: String
+    open val description: CommandDescription
+        get() = CommandDescription("commands.$name.description")
     abstract val usage: String
     abstract val permission: Permission
     abstract val category: CommandCategory
@@ -36,5 +38,7 @@ abstract class AbstractCommand : CommandRegistry<AbstractSubCommand> {
      * @param context the [Context] in which the command is invoked
      */
     abstract suspend fun execute(context: Context)
+
+    data class CommandDescription(val name: String, val operation: Operation? = null)
 
 }
