@@ -46,7 +46,7 @@ class VoteBotImpl(private val config: Config) : VoteBot {
         discord = Discord(config.discordToken, httpClient, eventManager, this)
         gameAnimator = GameAnimator(discord, config)
 
-        influx = if (config.environment.debug && config.enableMetrics || config.environment.debug && !config.enableMetrics) {
+        influx = if (config.environment.debug && config.enableMetrics || !config.environment.debug && config.enableMetrics) {
             DefaultInfluxDBConnection(InfluxDBClientFactory.create(config.influxDbAddress, config.influxDbToken.toCharArray()), config.influxDbBucket, config.influxDbOrg)
         } else NopInfluxDBConnection()
 

@@ -44,7 +44,8 @@ class PrefixCommand : AbstractCommand() {
     private inner class ResetDefaultPrefixCommand : AbstractSubCommand(this) {
         override val aliases: List<String> = listOf("reset")
         override val displayName: String = "reset"
-        override val description: String = "Resets the prefix to the default. (`${Constants.prefix}`)"
+        override val description: CommandDescription = CommandDescription("commands.prefix.reset.description", Operation.Interpolation("prefix", Config.defaultPrefix))
+
         override val usage: String = ""
 
         override suspend fun execute(context: Context) {
@@ -61,19 +62,20 @@ class PrefixCommand : AbstractCommand() {
     private inner class ToggleDefaultPrefixCommand : AbstractSubCommand(this) {
         override val aliases: List<String> = listOf("toggle-default")
         override val displayName: String = "toggle-default"
-        override val description: String = "Toggles the default (`${Constants.prefix}`) prefix. (Only works if you have set a custom prefix)"
+        override val description: CommandDescription = CommandDescription("commands.prefix.toggle.description", Operation.Interpolation("prefix", Config.defaultPrefix))
         override val usage: String = ""
         override suspend fun execute(context: Context) {
             val translations = context.translations
             val guild = transaction { VoteBotGuild.findByGuildIdOrNew(context.guild.idLong) }
             if (guild.prefix == Constants.prefix && !guild.disableDefaultPrefix) {
-                context.respond(Embeds.error(translations.t("commands.prefix.toggle.not_allowed.title"), translations.t("commands.prefix.toggle.not_allowed.title"))).queue()
+                context.respond(Embeds.error(translations.t("commands.prefix.toggle.not_allowed.title"), translations.t("commands.prefix.toggle.not_allowed.description"))).queue()
                 return
             }
             transaction {
                 guild.disableDefaultPrefix = !guild.disableDefaultPrefix
             }
-            context.respond(Embeds.success("Toggled default prefix!", "You ${if (guild.disableDefaultPrefix) "enabled" else "disabled"} the default prefix. (`${Constants.prefix}`)")).queue()
+
+            context.respond(Embeds.success(translations.t("commands.prefix.toggle.success.title"), translations.t(if (guild.disableDefaultPrefix) "commands.prefix.toggle.success.descriptionDisabled" else "commands.prefix.toggle.success.descriptionEnabled", Operation.Interpolation("prefix", Config.defaultPrefix)))).queue()
         }
     }
 }

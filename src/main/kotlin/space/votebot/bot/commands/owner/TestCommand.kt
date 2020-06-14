@@ -26,7 +26,7 @@ class TestCommand : AbstractCommand() {
     private inner class PaginatorCommand : AbstractSubCommand(this) {
         override val aliases: List<String> = listOf("list", "paginator")
         override val displayName: String = "List"
-        override val description: String = "Test for paginator"
+//        override val description: String = "Test for paginator"
         override val usage: String = "<items>"
 
         override suspend fun execute(context: Context) {

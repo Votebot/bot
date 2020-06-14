@@ -41,7 +41,7 @@ class HelpCommand : AbstractCommand() {
 
     private fun sendCommandList(context: Context) {
         context.respond(
-                Embeds.info(context.translations.t("commands.help.info")) {
+                Embeds.info(context.translations.t("commands.help.info.title"), context.translations.t("commands.help.info.description")) {
                     val commands = context.commandClient.registeredCommands.filter {
                         context.commandClient.permissionHandler.isCovered(
                                 it.permission,

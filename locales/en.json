@@ -1,10 +1,12 @@
 {
   "key": "value",
+  "name": "English",
   "embeds": {
     "help": {
       "description": "Description",
       "aliases": "Aliases",
       "usage": "Usage",
+      "example_usage": "Example Usage",
       "permission": "Permission",
       "sub_commands": "Sub commands"
     }
@@ -21,24 +23,35 @@
         "description": "Updated prefix to `__newPrefix__`"
       },
       "reset": {
+        "description": "Resets the prefix to the default. (`__prefix__`)",
         "success": {
           "title": "Prefix reset!",
           "description": "Prefix is now again `__prefix__`"
         }
       },
       "toggle": {
+        "description": "Toggles the default (`__prefix__`) prefix. (Only works if you have set a custom prefix)",
         "not_allowed": {
           "title": "Not allowed to disable!",
           "description": "You first have to set a custom prefix in order to disable the default prefix."
         },
         "success": {
           "title": "Toggled default prefix!",
-          "description": ""
+          "descriptionEnabled": "You enabled the default prefix. (`__prefix__`)",
+          "descriptionDisabled": "You disabled the default prefix. (`__prefix__`)"
         }
       }
     },
     "language": {
-      "description": "Allows you to change the language of the bot."
+      "description": "Allows you to change the language of the bot.",
+      "unknown": {
+        "title": "Unknown language!",
+        "description": "The language __language__ is currently not supported. You can contribute to supported languages [here](https://app.phrase.com/accounts/michael-rittmeister/projects/votebot/dashboard).\n  Currently supported: __supportedLanguages__"
+      },
+      "success": {
+        "title": "Successfully changed language",
+        "description": "Successfully changed the language to `__language__` (__languageName__).\n"
+      }
     },
     "test": {
       "description": "Secret command for cool people."
@@ -52,7 +65,10 @@
         "title": "Command not found!",
         "description": "I couldn't find a command with that name"
       },
-      "info": "Command-Help\", \"\"\"This is a list of all commands,\n            | in order to learn more about a specific command run `v!help [command]`"
+      "info": {
+        "title": "Command-Help",
+        "description": "This is a list of all commands,\n            | in order to learn more about a specific command run `v!help [command]`"
+      }
     }
   }
 }

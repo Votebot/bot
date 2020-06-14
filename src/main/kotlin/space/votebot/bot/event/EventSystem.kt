@@ -42,7 +42,7 @@ class AnnotatedEventManager(
 ) : IEventManager {
 
     private val logger = KotlinLogging.logger { }
-    private val listeners = mutableListOf<Any>()
+    private val listeners = mutableSetOf<Any>()
     private val functions = mutableMapOf<KType, MutableSet<InstanceFunction>>()
     private val coroutine = coroutineContext + CoroutineExceptionHandler { _, throwable ->
         logger.error(throwable) { "Exception caught in Event Listener" }

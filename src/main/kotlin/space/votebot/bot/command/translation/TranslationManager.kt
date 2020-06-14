@@ -11,6 +11,7 @@ object TranslationManager {
     private val languageStorage: Map<String, I18Next>
     private val defaultLanguage
         get() = languageStorage["en"] ?: error("Missing default locale")
+    val supportedLanguages: Set<String>
 
     init {
         languageStorage = File("locales").listFiles()?.map { file ->
@@ -19,7 +20,7 @@ object TranslationManager {
             val languageName = file.nameWithoutExtension
             languageName to i18n
         }?.toMap() ?: error("Missing language files")
-        println(languageStorage)
+        supportedLanguages = languageStorage.keys
     }
 
     fun forUser(user: VoteBotUser) = forLanguage(user.locale)

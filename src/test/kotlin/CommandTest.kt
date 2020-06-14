@@ -102,7 +102,7 @@ class CommandTest {
             override val aliases: List<String> = listOf("test")
             override val displayName: String
                 get() = TODO("Not yet implemented")
-            override val description: String
+            override val description: CommandDescription
                 get() = TODO("Not yet implemented")
             override val usage: String
                 get() = TODO("Not yet implemented")
