@@ -16,6 +16,7 @@ class PrefixCommand : AbstractCommand() {
     override val aliases: List<String> = listOf("prefix", "p")
     override val displayName: String = "prefix"
     override val usage: String = "<prefix>"
+    override val exampleUsage: String = "v?"
     override val permission: Permission = Permission.ADMIN
     override val category: CommandCategory = CommandCategory.SETTINGS
 

@@ -14,6 +14,7 @@ class StatusCommand : AbstractCommand() {
     override val aliases: List<String> = listOf("status")
     override val displayName: String = "Status"
     override val usage: String = "[type] [status] [duration] <game>"
+    override val exampleUsage: String = "DEFAULT ONLINE 300 SampleGame"
     override val permission: Permission = Permission.BOT_OWNER
     override val category: CommandCategory = CommandCategory.BOT_OWNER
 

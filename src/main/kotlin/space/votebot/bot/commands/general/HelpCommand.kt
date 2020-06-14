@@ -13,6 +13,7 @@ class HelpCommand : AbstractCommand() {
     override val aliases: List<String> = listOf("help", "h")
     override val displayName: String = "help"
     override val usage: String = "[command]"
+    override val exampleUsage: String = "help"
     override val permission: Permission = Permission.ANY
     override val category: CommandCategory = CommandCategory.GENERAL
 

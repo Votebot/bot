@@ -39,7 +39,7 @@ class VoteBotImpl(private val config: Config) : VoteBot {
     override val discord: Discord
     override val debugMode = config.environment.debug
     override val gameAnimator: GameAnimator
-    override val commandClient: CommandClient = CommandClientImpl(this, Constants.prefix)
+    override val commandClient: CommandClient = CommandClientImpl(this, Config.defaultPrefix)
 
     init {
         dataSource = initDatabase()
