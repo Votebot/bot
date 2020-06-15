@@ -13,6 +13,7 @@ version = "1.0-SNAPSHOT"
 repositories {
     jcenter()
     maven("https://kotlin.bintray.com/ktor")
+    maven("https://dl.bintray.com/votebot/maven" )
     maven("https://jitpack.io")
 }
 
@@ -53,8 +54,9 @@ dependencies {
     implementation("io.github.cdimascio", "java-dotenv", "5.1.4")
     implementation("com.squareup.okhttp3", "okhttp", "4.4.0")
     implementation("xyz.downgoon", "snowflake", "1.0.0")
-    implementation(files("libs/i18next-kein-android-all.jar"))
 
+    // i18next
+    implementation("com.i18next", "i18next-kein-android", "1.0")
 
     // Kotlin
     implementation(kotlin("stdlib-jdk8"))
