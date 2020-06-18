@@ -80,12 +80,17 @@ open class BaseContext(
     val selfUser: SelfUser
         get() = jda.selfUser
 
+    /**
+     * [VoteBotUser] of the
+     */
     val voteBotUser: VoteBotUser by lazy {
         transaction { VoteBotUser.findById(author.idLong) ?: VoteBotUser.new(author.idLong) {} }
     }
 
-    val translations: I18Next
-        get() = TranslationManager.forUser(voteBotUser)
+    /**
+     * Translation based on [voteBotUser].
+     */
+    val translations: I18Next by lazy { TranslationManager.forUser(voteBotUser) }
 
     /**
      * Sends [content] into [channel].

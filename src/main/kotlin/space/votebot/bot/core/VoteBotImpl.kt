@@ -13,13 +13,14 @@ import space.votebot.bot.command.CommandClient
 import space.votebot.bot.command.impl.CommandClientImpl
 import space.votebot.bot.command.impl.DebugCommandHandler
 import space.votebot.bot.command.impl.ProductionCommandHandler
+import space.votebot.bot.command.permission.PermissionNodes
 import space.votebot.bot.commands.general.HelpCommand
 import space.votebot.bot.commands.owner.StatusCommand
 import space.votebot.bot.commands.owner.TestCommand
 import space.votebot.bot.commands.settings.LanguageCommand
+import space.votebot.bot.commands.settings.PermissionsCommand
 import space.votebot.bot.commands.settings.PrefixCommand
 import space.votebot.bot.config.Config
-import space.votebot.bot.constants.Constants
 import space.votebot.bot.database.VoteBotGuilds
 import space.votebot.bot.database.VoteBotUsers
 import space.votebot.bot.event.AnnotatedEventManager
@@ -30,7 +31,7 @@ import space.votebot.bot.util.DefaultInfluxDBConnection
 import space.votebot.bot.util.InfluxDBConnection
 import space.votebot.bot.util.NopInfluxDBConnection
 
-class VoteBotImpl(private val config: Config) : VoteBot {
+internal class VoteBotImpl(private val config: Config) : VoteBot {
 
     private val dataSource: HikariDataSource
     override val influx: InfluxDBConnection
@@ -68,7 +69,7 @@ class VoteBotImpl(private val config: Config) : VoteBot {
         }
         Database.connect(dataSource)
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(VoteBotGuilds, VoteBotUsers)
+            SchemaUtils.createMissingTablesAndColumns(VoteBotGuilds, VoteBotUsers, PermissionNodes)
         }
         return dataSource
     }
@@ -91,7 +92,8 @@ class VoteBotImpl(private val config: Config) : VoteBot {
                 PrefixCommand(),
                 StatusCommand(),
                 TestCommand(),
-                LanguageCommand()
+                LanguageCommand(),
+                PermissionsCommand()
         )
     }
 

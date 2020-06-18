@@ -28,14 +28,11 @@ class Context(
         responseNumber: Long
 ) : BaseContext(bot, message, responseNumber) {
 
+    /**
+     * The [Arguments] of the command.
+     */
     val args: Arguments
         get() = _args!!
-
-
-    /**
-     * Checks whether the [member] has [Permission.ADMIN] or not.
-     */
-    fun hasAdmin(): Boolean = hasPermission(Permission.ADMIN)
 
     /**
      * Sends a help embed for [command].
@@ -43,5 +40,4 @@ class Context(
      */
     fun sendHelp(): MessageAction = respond(Embeds.command(command, this))
 
-    private fun hasPermission(permission: Permission) = commandClient.permissionHandler.isCovered(permission, member)
 }

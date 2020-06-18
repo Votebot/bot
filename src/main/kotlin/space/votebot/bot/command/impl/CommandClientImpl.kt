@@ -45,13 +45,13 @@ class CommandClientImpl(
                 Executors.newFixedThreadPool(
                         5,
                         DefaultThreadFactory("CommandExecution")
-                ).asCoroutineDispatcher()
+                ).asCoroutineDispatcher(),
+        override val permissionHandler: PermissionHandler = PermissionChecker()
 ) : CommandClient {
 
     private val delimiter = "\\s+".toRegex()
     private val commandCounter = AtomicInteger()
 
-    override val permissionHandler: PermissionHandler = PermissionChecker()
     override val commandAssociations: MutableMap<String, AbstractCommand> = mutableMapOf()
 
     /**
@@ -105,7 +105,7 @@ class CommandClientImpl(
                     val context = Context(bot, command, arguments, message, this, responseNumber)
                     @Suppress("ReplaceNotNullAssertionWithElvisReturn") // Cannot be null in this case since it is send from a TextChannel
                     if (!permissionHandler.isCovered(
-                                    command.permission,
+                                    command,
                                     message.member!!
                             )
                     ) return bot.eventManager.handle(CommandNoPermissionEvent(context.jda, context.responseNumber, context.message, context))

@@ -84,7 +84,7 @@ class AnnotatedEventManager(
     }
 
     private fun findSubscriberFunctions(clazz: KClass<*>) =
-            clazz.declaredFunctions.filterNot { it.findAnnotation<EventSubscriber>() == null }
+            clazz.functions.filterNot { it.findAnnotation<EventSubscriber>() == null }
 
     private fun determineEventType(function: KFunction<*>): KType {
         val parameters = function.valueParameters
@@ -138,8 +138,9 @@ class AnnotatedEventManager(
                     it.call(event)
                 }
             }
-            if (eventType != GenericEvent::class && callParents) {
-                callEvent(eventType.superclasses.first())
+
+            if (eventClass != GenericEvent::class && callParents) {
+                callEvent(eventClass.superclasses.first())
             }
         }
 

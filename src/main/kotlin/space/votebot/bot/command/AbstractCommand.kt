@@ -14,8 +14,9 @@ import space.votebot.bot.command.permission.Permission
  * @property permission the command permissions
  * @property commandAssociations all alias-command associations of sub-commands
  * @property category the [CommandCategory] of the command
- * @property callback an [Exception] that is supposed to highlight class defention line
+ * @property callback an [Exception] that is supposed to highlight class definition line
  * @property exampleUsage an example how to use the command
+ * @property permissionNode permission node needed to execute this command
  */
 abstract class AbstractCommand : CommandRegistry<AbstractSubCommand> {
     open val callback: Exception = Exception()
@@ -33,12 +34,21 @@ abstract class AbstractCommand : CommandRegistry<AbstractSubCommand> {
     abstract val category: CommandCategory
     open val exampleUsage: String
         get() = ""
+
+    val permissionNode: String by lazy { "commands.$name" }
+
     /**
      * Invokes the command.
      * @param context the [Context] in which the command is invoked
      */
     abstract suspend fun execute(context: Context)
 
+    /**
+     * Container for command description information.
+     *
+     * @property name name of the localizations string
+     * @property operation an [Operation] to perform on the localization string
+     */
     data class CommandDescription(val name: String, val operation: Operation? = null)
 
 }
