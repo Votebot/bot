@@ -105,7 +105,7 @@ class CommandClientImpl(
                     val context = Context(bot, command, arguments, message, this, responseNumber)
                     @Suppress("ReplaceNotNullAssertionWithElvisReturn") // Cannot be null in this case since it is send from a TextChannel
                     if (!permissionHandler.isCovered(
-                                    command.permission,
+                                    command,
                                     message.member!!
                             )
                     ) return bot.eventManager.handle(CommandNoPermissionEvent(context.jda, context.responseNumber, context.message, context))

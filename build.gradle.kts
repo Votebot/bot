@@ -38,7 +38,7 @@ dependencies {
     testImplementation("io.ktor", "ktor-server-tests", "1.3.2")
 
     // JDA
-    implementation("net.dv8tion", "JDA", "4.1.1_131") {
+    implementation("net.dv8tion", "JDA", "4.1.1_165") {
         exclude(module = "opus-java")
     }
 

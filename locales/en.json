@@ -9,9 +9,27 @@
       "example_usage": "Example Usage",
       "permission": "Permission",
       "sub_commands": "Sub commands"
+    },
+    "no_permission": {
+      "title": "Insufficient Permissions!",
+      "description": "You need the `__permission__` permission or the `__node__` permission node in order to execute this command."
     }
   },
   "commands": {
+    "permissions": {
+      "invalid_mode": {
+        "title": "Invalid mode!",
+        "description": "You can only `allow`, `neutral` or `deny` permissions."
+      },
+      "invalid_target": {
+        "title": "Invalid target!",
+        "description": "Please specify a valid Role or User."
+      },
+      "success": {
+        "title": "Successfully created node!",
+        "description": "Successfully created permission node: `__node__`"
+      }
+    },
     "prefix": {
       "description": "Configure the bot's prefix.",
       "too_long": {
