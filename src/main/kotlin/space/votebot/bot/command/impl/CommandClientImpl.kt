@@ -45,13 +45,13 @@ class CommandClientImpl(
                 Executors.newFixedThreadPool(
                         5,
                         DefaultThreadFactory("CommandExecution")
-                ).asCoroutineDispatcher()
+                ).asCoroutineDispatcher(),
+        override val permissionHandler: PermissionHandler = PermissionChecker()
 ) : CommandClient {
 
     private val delimiter = "\\s+".toRegex()
     private val commandCounter = AtomicInteger()
 
-    override val permissionHandler: PermissionHandler = PermissionChecker()
     override val commandAssociations: MutableMap<String, AbstractCommand> = mutableMapOf()
 
     /**

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test
 import space.votebot.bot.command.AbstractCommand
 import space.votebot.bot.command.AbstractSubCommand
 import space.votebot.bot.command.CommandCategory
+import space.votebot.bot.command.PermissionHandler
 import space.votebot.bot.command.context.Context
 import space.votebot.bot.command.impl.CommandClientImpl
 import space.votebot.bot.command.permission.Permission
@@ -206,7 +207,7 @@ class CommandTest {
                 on { this.influx }.thenReturn(influx)
                 on { eventManager }.thenReturn(eventManager)
             }
-            client = CommandClientImpl(bot, Constants.prefix, Dispatchers.Unconfined)
+            client = CommandClientImpl(bot, Constants.prefix, Dispatchers.Unconfined, TestPermissionHandler())
             jda = mock()
 
             selfMember = mock {
@@ -243,4 +244,8 @@ private class EmptyRestAction<T> : RestAction<T> {
 
     override fun setCheck(checks: BooleanSupplier?): RestAction<T> = this
 
+}
+
+class TestPermissionHandler : PermissionHandler {
+    override fun isCovered(command: AbstractCommand, executor: Member) = true
 }
