@@ -9,8 +9,11 @@ import net.dv8tion.jda.api.requests.RestAction
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.junit.Rule
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.rules.TemporaryFolder
 import space.votebot.bot.command.AbstractCommand
 import space.votebot.bot.command.AbstractSubCommand
 import space.votebot.bot.command.CommandCategory
@@ -18,19 +21,24 @@ import space.votebot.bot.command.PermissionHandler
 import space.votebot.bot.command.context.Context
 import space.votebot.bot.command.impl.CommandClientImpl
 import space.votebot.bot.command.permission.Permission
+import space.votebot.bot.command.permission.PermissionNodes
 import space.votebot.bot.constants.Constants
 import space.votebot.bot.core.VoteBot
 import space.votebot.bot.database.VoteBotGuilds
+import space.votebot.bot.database.VoteBotUsers
 import space.votebot.bot.event.AnnotatedEventManager
 import space.votebot.bot.event.EventSubscriber
 import space.votebot.bot.events.CommandErrorEvent
 import space.votebot.bot.util.NopInfluxDBConnection
 import space.votebot.bot.util.asMention
+import java.nio.file.Files
+import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
 import java.util.function.BooleanSupplier
 import java.util.function.Consumer
 
 class CommandTest {
+
 
     @Test
     fun `check prefixed normal command`() {
@@ -189,13 +197,30 @@ class CommandTest {
         private lateinit var author: User
         private val eventManager: IEventManager = AnnotatedEventManager(Dispatchers.Unconfined)
 
+
+        @Rule
+        @JvmField
+        val temporaryFolder: TemporaryFolder = TemporaryFolder()
+
+        @AfterAll
+        @JvmStatic
+        @Suppress("unused")
+        fun `delete temporary folder`() {
+            temporaryFolder.delete()
+        }
+
         @BeforeAll
         @JvmStatic
         @Suppress("unused")
         fun `setup database`() {
-            Database.connect("jdbc:h2:~/tmp/test.db", driver = "org.h2.Driver")
+            temporaryFolder.create()
+            val file = Path.of("${temporaryFolder.newFolder().absolutePath}/test.db")
+            if (!Files.exists(file)) {
+                Files.createFile(file)
+            }
+            Database.connect("jdbc:sqlite:${file.toFile().absolutePath}")
             transaction {
-                SchemaUtils.create(VoteBotGuilds)
+                SchemaUtils.create(VoteBotGuilds, VoteBotUsers, PermissionNodes)
             }
         }
 

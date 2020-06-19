@@ -43,10 +43,10 @@ dependencies {
     }
 
     // Database
-    implementation("org.jetbrains.exposed", "exposed-core", "0.22.1")
-    implementation("org.jetbrains.exposed", "exposed-jdbc", "0.22.1")
-    implementation("org.jetbrains.exposed", "exposed-dao", "0.22.1")
-    implementation("org.jetbrains.exposed", "exposed-java-time", "0.22.1")
+    implementation("org.jetbrains.exposed", "exposed-core", "0.25.1")
+    implementation("org.jetbrains.exposed", "exposed-jdbc", "0.25.1")
+    implementation("org.jetbrains.exposed", "exposed-dao", "0.25.1")
+    implementation("org.jetbrains.exposed", "exposed-java-time", "0.25.1")
     implementation("com.zaxxer", "HikariCP", "3.4.2")
     implementation("org.postgresql", "postgresql", "42.2.12")
 
@@ -70,6 +70,7 @@ dependencies {
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.6.0")
     testImplementation("com.h2database", "h2", "1.4.200")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.6.0")
+    testImplementation("org.xerial", "sqlite-jdbc", "3.31.1")
 }
 
 application {
