@@ -25,7 +25,12 @@ object VoteBotUsers : IdTable<Long>("users") {
  * @property locale the selected locale of the user
  */
 class VoteBotUser(id: EntityID<Long>) : LongEntity(id) {
-    companion object : LongEntityClass<VoteBotUser>(VoteBotUsers)
+    companion object : LongEntityClass<VoteBotUser>(VoteBotUsers) {
+        /**
+         * Finds a [VoteBotUser] for [id] or creates a new one if necessary.
+         */
+        fun findOrCreate(id: Long): VoteBotUser = findById(id) ?: new(id) { }
+    }
 
     val discordId: Long
         get() = id.value

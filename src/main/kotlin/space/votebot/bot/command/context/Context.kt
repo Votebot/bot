@@ -8,6 +8,7 @@ import space.votebot.bot.command.CommandClient
 import space.votebot.bot.command.permission.Permission
 import space.votebot.bot.constants.Embeds
 import space.votebot.bot.core.VoteBot
+import space.votebot.bot.database.VoteBotUser
 
 /**
  * Representation of a context of a command execution.
@@ -17,6 +18,7 @@ import space.votebot.bot.core.VoteBot
  * @property bot instance of the [VoteBot]
  * @property message the message that triggered the command
  * @property responseNumber response number of triggering event
+ * @property voteBotUser the votebotUse of the message
  */
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class Context(
@@ -25,8 +27,9 @@ class Context(
         val _args: Arguments?,
         message: Message,
         val commandClient: CommandClient,
-        responseNumber: Long
-) : BaseContext(bot, message, responseNumber) {
+        responseNumber: Long,
+        voteBotUser: VoteBotUser
+) : BaseContext(bot, message, responseNumber, voteBotUser) {
 
     /**
      * The [Arguments] of the command.
