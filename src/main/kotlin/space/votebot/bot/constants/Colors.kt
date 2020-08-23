@@ -1,5 +1,3 @@
-
-
 package space.votebot.bot.constants
 
 import java.awt.Color
@@ -15,6 +13,7 @@ object Colors {
     val GREYPLE: Color = Color(153, 170, 181)
     val DARK_BUT_NOT_BLACK: Color = Color(44, 47, 51)
     val NOT_QUITE_BLACK: Color = Color(33, 39, 42)
+
     // Other colors
     val LIGHT_RED: Color = Color(231, 76, 60)
     val DARK_RED: Color = Color(192, 57, 43)

@@ -1,55 +1,24 @@
-/*package space.votebot.bot.metrics
+package space.votebot.bot.metrics
 
-import com.influxdb.client.domain.WritePrecision
-import com.influxdb.client.write.Point
 import com.zaxxer.hikari.HikariDataSource
-import kotlinx.coroutines.ObsoleteCoroutinesApi
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.channels.ticker
-import mu.KotlinLogging
-import space.votebot.bot.util.DefaultThreadFactory
-import space.votebot.bot.util.InfluxDBConnection
-import java.net.InetAddress
-import java.time.Instant
-import java.util.concurrent.TimeUnit
-
+import io.micrometer.core.instrument.Gauge
 
 /**
- * DatabaseMetrics posts information about the the database connection pool to InfluxDB.
- * @param influx the [InfluxDBConnection]
+ * DatabaseMetrics collects metrics about the database connections.
  */
-class DatabaseMetrics(private val dataSource: HikariDataSource, private val influx: InfluxDBConnection) {
+class DatabaseMetrics(private val dataSource: HikariDataSource) {
 
-    private val log = KotlinLogging.logger { }
+    init {
+        Gauge.builder("db_connections") {
+            dataSource.hikariPoolMXBean.activeConnections
+        }.tags("status", "active").register(Metrics)
 
-    private val context = DefaultThreadFactory.newSingleThreadExecutor("db-metrics").asCoroutineDispatcher()
+        Gauge.builder("db_connections") {
+            dataSource.hikariPoolMXBean.idleConnections
+        }.tags("status", "idle").register(Metrics)
 
-    @OptIn(ObsoleteCoroutinesApi::class)
-    private val scheduler = ticker(TimeUnit.SECONDS.toMillis(5), 0, context = context)
-
-    private val hostName = InetAddress.getLocalHost().hostName
-
-    /**
-     * Starts posting stats
-     */
-    suspend fun start() {
-        for (unit in scheduler) {
-            influx.writePoint(Point.measurement("db_connections").apply {
-                addTag("host", hostName)
-                addField("active", dataSource.hikariPoolMXBean.activeConnections)
-                addField("idle", dataSource.hikariPoolMXBean.idleConnections)
-                addField("total", dataSource.hikariPoolMXBean.totalConnections)
-                time(Instant.now().toEpochMilli(), WritePrecision.MS)
-            })
-            log.debug { "Posted UserCount Metrics." }
-        }
+        Gauge.builder("db_connections") {
+            dataSource.hikariPoolMXBean.totalConnections
+        }.tags("status", "total").register(Metrics)
     }
-
-    /**
-     * Stops posting stats and closes all used resources.
-     */
-    fun stop() {
-        scheduler.cancel()
-        context.close()
-    }
-}*/
+}
