@@ -180,6 +180,7 @@ class CommandTest {
     private fun mockCommand(
             stubbing: KStubbing<AbstractCommand>.() -> Unit
     ) = mock<AbstractCommand> {
+        on { aliases }.thenReturn(listOf("test", "t"))
         on { permission }.thenReturn(Permission.ANY)
         stubbing(this)
     }
