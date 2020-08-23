@@ -1,8 +1,6 @@
 package space.votebot.bot.core
 
 import com.zaxxer.hikari.HikariDataSource
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.hooks.IEventManager
 import okhttp3.OkHttpClient
 import org.jetbrains.exposed.sql.Database
