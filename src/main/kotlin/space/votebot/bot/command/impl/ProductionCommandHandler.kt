@@ -13,10 +13,16 @@ import space.votebot.bot.util.stringify
 import java.time.LocalDateTime
 import kotlin.coroutines.CoroutineContext
 
-class ProductionCommandHandler(private val errorReportChannel: Long) {
+/**
+ * Command handler used in production.
+ */
+class ProductionCommandHandler(private val errorReportChannel: Long) : AbstractCommandHandler() {
 
     private val logger = KotlinLogging.logger {}
 
+    /**
+     * Reports error to hastebin.
+     */
     @EventSubscriber
     fun commandErrored(event: CommandErrorEvent) {
         logger.error(event.error) { "An error occurred whilst command execution" }

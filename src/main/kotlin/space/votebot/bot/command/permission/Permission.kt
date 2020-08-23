@@ -10,14 +10,10 @@ enum class Permission {
     ANY,
 
     /**
-     * Only privileged members can execute the command.
-     */
-    PRIVILEGED,
-
-    /**
      * Only administrators can execute the command.
      */
     ADMIN,
+
     /**
      * Commands only executable by bot owners.
      */

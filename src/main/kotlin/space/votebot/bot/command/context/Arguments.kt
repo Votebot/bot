@@ -56,21 +56,21 @@ data class Arguments(
      * Return the argument at the specified [index] as a [User] or `null` if there is no argument at that position, or it is not a [User].
      * @param ignoreCase whether the case of the name should be ignored or not
      */
-    fun optionalUser(index: Int, ignoreCase: Boolean = false, jda: JDA): User? =
+    suspend fun optionalUser(index: Int, ignoreCase: Boolean = false, jda: JDA): User? =
             optionalArgument(index) { EntityResolver.resolveUser(jda, it, ignoreCase) }
 
     /**
      * Return the argument at the specified [index] as a [Member] or `null` if there is no argument at that position, or it is not a [Member].
      * @param ignoreCase whether the case of the name should be ignored or not
      */
-    fun optionalMember(index: Int, ignoreCase: Boolean = false, guild: Guild): Member? =
+    suspend fun optionalMember(index: Int, ignoreCase: Boolean = false, guild: Guild): Member? =
             optionalArgument(index) { EntityResolver.resolveMember(guild, it, ignoreCase) }
 
     /**
      * Return the argument at the specified [index] as a [Role] or `null` if there is no argument at that position, or it is not a [Role].
      * @param ignoreCase whether the case of the name should be ignored or not
      */
-    fun optionalRole(index: Int, ignoreCase: Boolean = false, guild: Guild): Role? =
+    suspend fun optionalRole(index: Int, ignoreCase: Boolean = false, guild: Guild): Role? =
             optionalArgument(index) { EntityResolver.resolveRole(guild, it, ignoreCase) }
 
     /**
@@ -84,7 +84,7 @@ data class Arguments(
      * Return the argument at the specified [index] as a [TextChannel] or `null` if there is no argument at that position, or it is not a [TextChannel].
      * @param ignoreCase whether the case of the name should be ignored or not
      */
-    fun optionalChannel(
+    suspend fun optionalChannel(
             index: Int,
             ignoreCase: Boolean = false,
             guild: Guild
@@ -98,7 +98,7 @@ data class Arguments(
      */
     fun requiredArgument(index: Int, context: Context): String? =
             requiredArgument(index, context, this::optionalArgument) {
-                Embeds.command(context.command)
+                Embeds.command(context.command, context)
             }
 
     /**
@@ -131,7 +131,7 @@ data class Arguments(
      * @param ignoreCase whether the case of the name should be ignored or not
      * @param context the context that executed the command
      */
-    fun user(index: Int, ignoreCase: Boolean = false, context: Context): User? =
+    suspend fun user(index: Int, ignoreCase: Boolean = false, context: Context): User? =
             requiredArgument(index, context, { optionalUser(index, ignoreCase, context.jda) }) {
                 Embeds.error("Invalid User", "There seems to be no user with that name.")
             }
@@ -142,7 +142,7 @@ data class Arguments(
      * @param ignoreCase whether the case of the name should be ignored or not
      * @param context the context that executed the command
      */
-    fun member(index: Int, ignoreCase: Boolean = false, context: Context): Member? =
+    suspend fun member(index: Int, ignoreCase: Boolean = false, context: Context): Member? =
             requiredArgument(index, context, { optionalMember(index, ignoreCase, context.guild) }) {
                 Embeds.error("Invalid User", "There seems to be no user with that name.")
             }
@@ -153,7 +153,7 @@ data class Arguments(
      * @param ignoreCase whether the case of the name should be ignored or not
      * @param context the context that executed the command
      */
-    fun role(index: Int, ignoreCase: Boolean = false, context: Context): Role? =
+    suspend fun role(index: Int, ignoreCase: Boolean = false, context: Context): Role? =
             requiredArgument(index, context, { optionalRole(index, ignoreCase, context.guild) }) {
                 Embeds.error("Invalid Role!", "There seems to be no Role with that name.")
             }
@@ -164,21 +164,32 @@ data class Arguments(
      * @param ignoreCase whether the case of the name should be ignored or not
      * @param context the context that executed the command
      */
-    fun channel(index: Int, ignoreCase: Boolean = false, context: Context): TextChannel? =
+    suspend fun channel(index: Int, ignoreCase: Boolean = false, context: Context): TextChannel? =
             requiredArgument(index, context, { optionalChannel(index, ignoreCase, context.guild) }) {
                 Embeds.error("Invalid Channel!", "There seems to be no channel with chat name.")
             }
 
+    /**
+     * Return the argument at the specified [index] as a [T] or `null` if there is no argument at that position.
+     * If there is no [T] at that position it sends a help message.
+     * @param context the context that executed the command
+     */
     inline fun <reified T : Enum<T>> enum(index: Int, context: Context): T? = requiredArgument(index, context, {
         optionalEnum<T>(index)
     }, {
         Embeds.error("Invalid option!", "Please choose from one of the following options: `${T::class.java.enumConstants.joinToString("`", "`, `", "`")}`")
     })
 
-    fun <T> optionalArgument(index: Int, transform: ArgumentConverter<T>): T? =
+    /**
+     * Internal method.
+     */
+    inline fun <T> optionalArgument(index: Int, transform: ArgumentConverter<T>): T? =
             optionalArgument(index)?.let(transform)
 
-    fun <T> requiredArgument(
+    /**
+     * Internal method.
+     */
+    inline fun <T> requiredArgument(
             index: Int,
             context: Context,
             provider: (Int) -> T?,

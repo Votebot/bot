@@ -1,4 +1,4 @@
-package space.votebot.bot.metrics
+/*package space.votebot.bot.metrics
 
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.write.Point
@@ -46,4 +46,4 @@ class MemoryMetrics(private val influx: InfluxDBConnection) {
     fun stop() {
         scheduler.cancel()
     }
-}
+}*/

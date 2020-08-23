@@ -1,6 +1,5 @@
 package space.votebot.bot.command.impl
 
-import com.influxdb.client.write.Point
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -18,6 +17,7 @@ import space.votebot.bot.command.context.Arguments
 import space.votebot.bot.command.context.Context
 import space.votebot.bot.core.VoteBot
 import space.votebot.bot.database.VoteBotGuild
+import space.votebot.bot.database.VoteBotUser
 import space.votebot.bot.event.EventSubscriber
 import space.votebot.bot.events.CommandErrorEvent
 import space.votebot.bot.events.CommandExecutedEvent
@@ -45,13 +45,13 @@ class CommandClientImpl(
                 Executors.newFixedThreadPool(
                         5,
                         DefaultThreadFactory("CommandExecution")
-                ).asCoroutineDispatcher()
+                ).asCoroutineDispatcher(),
+        override val permissionHandler: PermissionHandler = PermissionChecker()
 ) : CommandClient {
 
     private val delimiter = "\\s+".toRegex()
     private val commandCounter = AtomicInteger()
 
-    override val permissionHandler: PermissionHandler = PermissionChecker()
     override val commandAssociations: MutableMap<String, AbstractCommand> = mutableMapOf()
 
     /**
@@ -102,23 +102,24 @@ class CommandClientImpl(
 
         message.textChannel.sendTyping() // since rest actions are async, we need to wait for send typing to succeed
                 .queue(fun(_: Void?) { // Since Void has a private constructor JDA passes in null, so it has to be nullable even if it is not used
-                    val context = Context(bot, command, arguments, message, this, responseNumber)
+                    val voteBotUser = transaction { VoteBotUser.findOrCreate(message.author.idLong) }
+                    val context = Context(bot, command, arguments, message, this, responseNumber, voteBotUser)
                     @Suppress("ReplaceNotNullAssertionWithElvisReturn") // Cannot be null in this case since it is send from a TextChannel
                     if (!permissionHandler.isCovered(
-                                    command.permission,
+                                    command,
                                     message.member!!
                             )
                     ) return bot.eventManager.handle(CommandNoPermissionEvent(context.jda, context.responseNumber, context.message, context))
                     val t1 = Instant.now()
                     processCommand(command, context)
                     val t2 = Instant.now()
-                    GlobalScope.launch {
+                    /*GlobalScope.launch {
                         bot.influx.writePoint(Point.measurement("commands_executed")
                                 .addTag("command", parent?.name ?: command.name)
                                 .addField("duration", t2.minusMillis(t1.toEpochMilli()).toEpochMilli())
                                 .addField("count", commandCounter.incrementAndGet())
                         )
-                    }
+                    }*/
                 })
     }
 
