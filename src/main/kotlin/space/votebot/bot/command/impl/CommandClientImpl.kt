@@ -1,5 +1,6 @@
 package space.votebot.bot.command.impl
 
+import io.micrometer.core.instrument.DistributionSummary
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -22,6 +23,7 @@ import space.votebot.bot.event.EventSubscriber
 import space.votebot.bot.events.CommandErrorEvent
 import space.votebot.bot.events.CommandExecutedEvent
 import space.votebot.bot.events.CommandNoPermissionEvent
+import space.votebot.bot.metrics.Metrics
 import space.votebot.bot.util.DefaultThreadFactory
 import space.votebot.bot.util.asMention
 import space.votebot.bot.util.hasSubCommands
@@ -49,6 +51,7 @@ class CommandClientImpl(
         override val permissionHandler: PermissionHandler = PermissionChecker()
 ) : CommandClient {
 
+    private val commandExecutions = DistributionSummary.builder("command_executions")
     private val delimiter = "\\s+".toRegex()
     private val commandCounter = AtomicInteger()
 
@@ -97,14 +100,13 @@ class CommandClientImpl(
 
         val nonPrefixedInput = rawInput.substring(prefix).trim()
 
-        val (command, arguments, parent) = resolveCommand(nonPrefixedInput)
+        val (command, arguments) = resolveCommand(nonPrefixedInput)
                 ?: return // No command found
 
         message.textChannel.sendTyping() // since rest actions are async, we need to wait for send typing to succeed
                 .queue(fun(_: Void?) { // Since Void has a private constructor JDA passes in null, so it has to be nullable even if it is not used
                     val voteBotUser = transaction { VoteBotUser.findOrCreate(message.author.idLong) }
                     val context = Context(bot, command, arguments, message, this, responseNumber, voteBotUser)
-                    @Suppress("ReplaceNotNullAssertionWithElvisReturn") // Cannot be null in this case since it is send from a TextChannel
                     if (!permissionHandler.isCovered(
                                     command,
                                     message.member!!
@@ -113,13 +115,10 @@ class CommandClientImpl(
                     val t1 = Instant.now()
                     processCommand(command, context)
                     val t2 = Instant.now()
-                    /*GlobalScope.launch {
-                        bot.influx.writePoint(Point.measurement("commands_executed")
-                                .addTag("command", parent?.name ?: command.name)
-                                .addField("duration", t2.minusMillis(t1.toEpochMilli()).toEpochMilli())
-                                .addField("count", commandCounter.incrementAndGet())
-                        )
-                    }*/
+                    println(command)
+                    if (command.aliases.isNotEmpty()) {
+                        commandExecutions.tags("command", command.name).register(Metrics).record(t2.minusMillis(t1.toEpochMilli()).toEpochMilli().toDouble())
+                    }
                 })
     }
 

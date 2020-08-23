@@ -54,20 +54,20 @@ class ProductionCommandHandler(private val errorReportChannel: Long) : AbstractC
         val information = StringBuilder()
         val channel = context.channel
         information.append("TextChannel: ").append('#').append(channel.name)
-                .append('(').append(channel.id).appendln(")")
+                .append('(').append(channel.id).appendLine(")")
         val guild = context.guild
         information.append("Guild: ").append(guild.name).append('(').append(guild.id)
-                .appendln(')')
+                .appendLine(')')
         val executor = context.author
         information.append("Executor: ").append('@').append(executor.name).append('#')
-                .append(executor.discriminator).append('(').append(executor.id).appendln(')')
+                .append(executor.discriminator).append('(').append(executor.id).appendLine(')')
         val selfMember = guild.selfMember
-        information.append("Permissions: ").appendln(selfMember.permissions)
-        information.append("Channel permissions: ").appendln(selfMember.getPermissions(channel))
-        information.append("Timestamp: ").appendln(LocalDateTime.now())
-        information.append("Thread: ").appendln(thread)
-        information.append("Coroutine: ").appendln(coroutineContext)
-        information.append("Stacktrace: ").appendln().append(e.stringify())
+        information.append("Permissions: ").appendLine(selfMember.permissions)
+        information.append("Channel permissions: ").appendLine(selfMember.getPermissions(channel))
+        information.append("Timestamp: ").appendLine(LocalDateTime.now())
+        information.append("Thread: ").appendLine(thread)
+        information.append("Coroutine: ").appendLine(coroutineContext)
+        information.append("Stacktrace: ").appendLine().append(e.stringify())
         return information.toString()
     }
 }
