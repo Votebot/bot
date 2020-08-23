@@ -10,7 +10,7 @@ version = "1.0-SNAPSHOT"
 repositories {
     jcenter()
     maven("https://kotlin.bintray.com/ktor")
-    maven("https://dl.bintray.com/votebot/maven" )
+    maven("https://dl.bintray.com/votebot/maven")
     maven("https://jitpack.io")
 }
 
@@ -26,6 +26,7 @@ dependencies {
 
     // Metrics
     implementation("io.ktor:ktor-metrics-micrometer:1.4.0")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.5.4")
 
     // Ktor
     implementation("io.ktor", "ktor-server-netty", "1.4.0")

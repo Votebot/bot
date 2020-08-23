@@ -8,7 +8,9 @@ import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.hooks.IEventManager
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import space.votebot.bot.event.*
+import space.votebot.bot.event.AnnotatedEventManager
+import space.votebot.bot.event.EventSubscriber
+import space.votebot.bot.event.hear
 
 class EventTest {
 

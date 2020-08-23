@@ -31,9 +31,9 @@ class DefaultThreadFactory(poolName: String?) : ThreadFactory {
      */
     override fun newThread(runnable: Runnable): Thread {
         val t = Thread(
-            group, runnable,
-            namePrefix + threadNumber.getAndIncrement(),
-            0
+                group, runnable,
+                namePrefix + threadNumber.getAndIncrement(),
+                0
         )
         if (t.isDaemon) t.isDaemon = false
         if (t.priority != Thread.NORM_PRIORITY) t.priority = Thread.NORM_PRIORITY
@@ -47,6 +47,6 @@ class DefaultThreadFactory(poolName: String?) : ThreadFactory {
          * Creates a new [Executors.newSingleThreadExecutor] using [poolName].
          */
         fun newSingleThreadExecutor(poolName: String?): ExecutorService =
-            Executors.newSingleThreadExecutor(DefaultThreadFactory(poolName))
+                Executors.newSingleThreadExecutor(DefaultThreadFactory(poolName))
     }
 }

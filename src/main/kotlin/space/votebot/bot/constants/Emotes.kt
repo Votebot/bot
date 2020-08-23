@@ -1,5 +1,3 @@
-
-
 package space.votebot.bot.constants
 
 /**

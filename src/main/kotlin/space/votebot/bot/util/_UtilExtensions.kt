@@ -1,7 +1,6 @@
 package space.votebot.bot.util
 
 import kotlinx.coroutines.future.await
-import space.votebot.bot.command.AbstractCommand
 import mu.KotlinLogging
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
@@ -10,6 +9,7 @@ import net.dv8tion.jda.api.utils.data.DataObject
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import space.votebot.bot.command.AbstractCommand
 import java.io.IOException
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -82,7 +82,7 @@ fun Throwable.stringify(): String {
  * Limits the length of a string by [amount] and adds [contraction] at the end.
  */
 fun String.limit(amount: Int, contraction: String = "..."): String =
-    if (length < amount) this else "${substring(0, amount - contraction.length)}$contraction"
+        if (length < amount) this else "${substring(0, amount - contraction.length)}$contraction"
 
 /**
  * Public map constructor of [DataObject].

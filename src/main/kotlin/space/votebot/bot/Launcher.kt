@@ -8,7 +8,7 @@ import space.votebot.bot.config.Config
 import space.votebot.bot.config.Environment
 import space.votebot.bot.core.VoteBotImpl as VoteBot
 
-suspend fun main() {
+fun main() {
     val logLevel = Level.valueOf(Config.logLevel)
 
     val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as Logger
@@ -20,5 +20,5 @@ suspend fun main() {
         Sentry.init()
     }
 
-    VoteBot(Config).start()
+    VoteBot(Config)
 }

@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction
 import space.votebot.bot.BaseContext
 import space.votebot.bot.command.AbstractCommand
 import space.votebot.bot.command.CommandClient
-import space.votebot.bot.command.permission.Permission
 import space.votebot.bot.constants.Embeds
 import space.votebot.bot.core.VoteBot
 import space.votebot.bot.database.VoteBotUser
