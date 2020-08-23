@@ -9,27 +9,35 @@ import net.dv8tion.jda.api.requests.RestAction
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.junit.Rule
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.rules.TemporaryFolder
 import space.votebot.bot.command.AbstractCommand
 import space.votebot.bot.command.AbstractSubCommand
 import space.votebot.bot.command.CommandCategory
+import space.votebot.bot.command.PermissionHandler
 import space.votebot.bot.command.context.Context
 import space.votebot.bot.command.impl.CommandClientImpl
 import space.votebot.bot.command.permission.Permission
+import space.votebot.bot.command.permission.PermissionNodes
 import space.votebot.bot.constants.Constants
 import space.votebot.bot.core.VoteBot
 import space.votebot.bot.database.VoteBotGuilds
+import space.votebot.bot.database.VoteBotUsers
 import space.votebot.bot.event.AnnotatedEventManager
 import space.votebot.bot.event.EventSubscriber
 import space.votebot.bot.events.CommandErrorEvent
-import space.votebot.bot.util.NopInfluxDBConnection
 import space.votebot.bot.util.asMention
+import java.nio.file.Files
+import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
 import java.util.function.BooleanSupplier
 import java.util.function.Consumer
 
 class CommandTest {
+
 
     @Test
     fun `check prefixed normal command`() {
@@ -102,7 +110,7 @@ class CommandTest {
             override val aliases: List<String> = listOf("test")
             override val displayName: String
                 get() = TODO("Not yet implemented")
-            override val description: String
+            override val description: CommandDescription
                 get() = TODO("Not yet implemented")
             override val usage: String
                 get() = TODO("Not yet implemented")
@@ -179,7 +187,6 @@ class CommandTest {
     companion object {
         private lateinit var bot: VoteBot
         private val arguments = listOf("sub", "2", "3")
-        private val influx = NopInfluxDBConnection()
         private lateinit var jda: JDA
         private lateinit var channel: TextChannel
         private lateinit var selfMember: Member
@@ -188,13 +195,30 @@ class CommandTest {
         private lateinit var author: User
         private val eventManager: IEventManager = AnnotatedEventManager(Dispatchers.Unconfined)
 
+
+        @Rule
+        @JvmField
+        val temporaryFolder: TemporaryFolder = TemporaryFolder()
+
+        @AfterAll
+        @JvmStatic
+        @Suppress("unused")
+        fun `delete temporary folder`() {
+            temporaryFolder.delete()
+        }
+
         @BeforeAll
         @JvmStatic
         @Suppress("unused")
         fun `setup database`() {
-            Database.connect("jdbc:h2:~/tmp/test.db", driver = "org.h2.Driver")
+            temporaryFolder.create()
+            val file = Path.of("${temporaryFolder.newFolder().absolutePath}/test.db")
+            if (!Files.exists(file)) {
+                Files.createFile(file)
+            }
+            Database.connect("jdbc:sqlite:${file.toFile().absolutePath}")
             transaction {
-                SchemaUtils.create(VoteBotGuilds)
+                SchemaUtils.create(VoteBotGuilds, VoteBotUsers, PermissionNodes)
             }
         }
 
@@ -203,10 +227,9 @@ class CommandTest {
         @Suppress("unused")
         fun `setup mock objects`() {
             bot = mock {
-                on { this.influx }.thenReturn(influx)
                 on { eventManager }.thenReturn(eventManager)
             }
-            client = CommandClientImpl(bot, Constants.prefix, Dispatchers.Unconfined)
+            client = CommandClientImpl(bot, Constants.prefix, Dispatchers.Unconfined, TestPermissionHandler())
             jda = mock()
 
             selfMember = mock {
@@ -243,4 +266,8 @@ private class EmptyRestAction<T> : RestAction<T> {
 
     override fun setCheck(checks: BooleanSupplier?): RestAction<T> = this
 
+}
+
+class TestPermissionHandler : PermissionHandler {
+    override fun isCovered(command: AbstractCommand, executor: Member) = true
 }

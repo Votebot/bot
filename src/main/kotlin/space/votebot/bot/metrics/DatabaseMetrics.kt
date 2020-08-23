@@ -1,4 +1,4 @@
-package space.votebot.bot.metrics
+/*package space.votebot.bot.metrics
 
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.write.Point
@@ -12,6 +12,7 @@ import space.votebot.bot.util.InfluxDBConnection
 import java.net.InetAddress
 import java.time.Instant
 import java.util.concurrent.TimeUnit
+
 
 /**
  * DatabaseMetrics posts information about the the database connection pool to InfluxDB.
@@ -51,4 +52,4 @@ class DatabaseMetrics(private val dataSource: HikariDataSource, private val infl
         scheduler.cancel()
         context.close()
     }
-}
+}*/

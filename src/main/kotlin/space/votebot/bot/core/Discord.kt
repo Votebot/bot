@@ -14,9 +14,14 @@ import space.votebot.bot.events.ShardWatcher
 
 private val restActionLogger = KotlinLogging.logger("RestActions")
 
+/**
+ * Discord related stuff.
+ *
+ * @property shardManager See [ShardManager]
+ */
 class Discord(discordToken: String, httpClient: OkHttpClient, eventManager: IEventManager, private val bot: VoteBot) {
 
-    val log = KotlinLogging.logger {}
+    private val log = KotlinLogging.logger {}
 
     val shardManager: ShardManager = DefaultShardManagerBuilder.createDefault(discordToken)
             .setEventManagerProvider { eventManager }
@@ -32,6 +37,10 @@ class Discord(discordToken: String, httpClient: OkHttpClient, eventManager: IEve
         }
     }
 
+    /**
+     * Handles [event].
+     */
+    @Suppress("UNUSED_PARAMETER")
     @EventSubscriber
     fun whenReady(event: AllShardsReadyEvent) {
         log.info { "Bot initialized!" }

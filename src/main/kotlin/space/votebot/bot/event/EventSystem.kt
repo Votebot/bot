@@ -42,7 +42,7 @@ class AnnotatedEventManager(
 ) : IEventManager {
 
     private val logger = KotlinLogging.logger { }
-    private val listeners = mutableListOf<Any>()
+    private val listeners = mutableSetOf<Any>()
     private val functions = mutableMapOf<KType, MutableSet<InstanceFunction>>()
     private val coroutine = coroutineContext + CoroutineExceptionHandler { _, throwable ->
         logger.error(throwable) { "Exception caught in Event Listener" }
@@ -84,7 +84,7 @@ class AnnotatedEventManager(
     }
 
     private fun findSubscriberFunctions(clazz: KClass<*>) =
-            clazz.declaredFunctions.filterNot { it.findAnnotation<EventSubscriber>() == null }
+            clazz.functions.filterNot { it.findAnnotation<EventSubscriber>() == null }
 
     private fun determineEventType(function: KFunction<*>): KType {
         val parameters = function.valueParameters
@@ -138,8 +138,9 @@ class AnnotatedEventManager(
                     it.call(event)
                 }
             }
-            if (eventType != GenericEvent::class && callParents) {
-                callEvent(eventType.superclasses.first())
+
+            if (eventClass != GenericEvent::class && callParents) {
+                callEvent(eventClass.superclasses.first())
             }
         }
 

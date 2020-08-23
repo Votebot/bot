@@ -1,4 +1,4 @@
-package space.votebot.bot.metrics
+/*package space.votebot.bot.metrics
 
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.write.Point
@@ -45,4 +45,4 @@ class GuildCountMetrics(private val shardManager: ShardManager, private val infl
         scheduler.cancel()
         context.close()
     }
-}
+}*/

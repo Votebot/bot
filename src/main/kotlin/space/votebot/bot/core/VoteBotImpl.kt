@@ -1,10 +1,8 @@
 package space.votebot.bot.core
 
-import com.influxdb.client.InfluxDBClientFactory
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import mu.KotlinLogging
 import net.dv8tion.jda.api.hooks.IEventManager
 import okhttp3.OkHttpClient
 import org.jetbrains.exposed.sql.Database
@@ -14,26 +12,21 @@ import space.votebot.bot.command.CommandClient
 import space.votebot.bot.command.impl.CommandClientImpl
 import space.votebot.bot.command.impl.DebugCommandHandler
 import space.votebot.bot.command.impl.ProductionCommandHandler
+import space.votebot.bot.command.permission.PermissionNodes
 import space.votebot.bot.commands.general.HelpCommand
 import space.votebot.bot.commands.owner.StatusCommand
 import space.votebot.bot.commands.owner.TestCommand
+import space.votebot.bot.commands.settings.LanguageCommand
+import space.votebot.bot.commands.settings.PermissionsCommand
 import space.votebot.bot.commands.settings.PrefixCommand
 import space.votebot.bot.config.Config
-import space.votebot.bot.constants.Constants
 import space.votebot.bot.database.VoteBotGuilds
+import space.votebot.bot.database.VoteBotUsers
 import space.votebot.bot.event.AnnotatedEventManager
-import space.votebot.bot.metrics.DatabaseMetrics
-import space.votebot.bot.metrics.GuildCountMetrics
-import space.votebot.bot.metrics.MemoryMetrics
-import space.votebot.bot.util.DefaultInfluxDBConnection
-import space.votebot.bot.util.InfluxDBConnection
-import space.votebot.bot.util.NopInfluxDBConnection
-import kotlin.contracts.contract
 
-class VoteBotImpl(private val config: Config) : VoteBot {
+internal class VoteBotImpl(private val config: Config) : VoteBot {
 
     private val dataSource: HikariDataSource
-    override val influx: InfluxDBConnection
     override val eventManager: IEventManager = AnnotatedEventManager()
     override val httpClient: OkHttpClient = OkHttpClient()
     override val discord: Discord
@@ -45,10 +38,6 @@ class VoteBotImpl(private val config: Config) : VoteBot {
         dataSource = initDatabase()
         discord = Discord(config.discordToken, httpClient, eventManager, this)
         gameAnimator = GameAnimator(discord, config)
-
-        influx = if (config.environment.debug && config.enableMetrics || config.environment.debug && !config.enableMetrics) {
-            DefaultInfluxDBConnection(InfluxDBClientFactory.create(config.influxDbAddress, config.influxDbToken.toCharArray()), config.influxDbBucket, config.influxDbOrg)
-        } else NopInfluxDBConnection()
 
         eventManager.register(commandClient)
         if (debugMode) {
@@ -68,12 +57,12 @@ class VoteBotImpl(private val config: Config) : VoteBot {
         }
         Database.connect(dataSource)
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(VoteBotGuilds)
+            SchemaUtils.createMissingTablesAndColumns(VoteBotGuilds, VoteBotUsers, PermissionNodes)
         }
         return dataSource
     }
 
-    private suspend fun initMetrics() {
+   /* private suspend fun initMetrics() {
         coroutineScope {
             // If metrics are disabled we usually just pass the no-op InfluxDBConnection. But as these are constantly
             // running we do this double check here.
@@ -83,18 +72,20 @@ class VoteBotImpl(private val config: Config) : VoteBot {
                 launch { GuildCountMetrics(discord.shardManager, influx).start() }
             }
         }
-    }
+    }*/
 
     private fun registerCommands() {
         commandClient.registerCommands(
                 HelpCommand(),
                 PrefixCommand(),
                 StatusCommand(),
-                TestCommand()
+                TestCommand(),
+                LanguageCommand(),
+                PermissionsCommand()
         )
     }
 
     suspend fun start() {
-        initMetrics()
+        // initMetrics()
     }
 }
