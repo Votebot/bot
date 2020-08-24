@@ -1,7 +1,7 @@
 package space.votebot.bot.command.impl
 
 import com.i18next.java.Operation
-import space.votebot.bot.constants.Embeds
+import space.votebot.bot.util.Embeds
 import space.votebot.bot.event.EventSubscriber
 import space.votebot.bot.events.CommandNoPermissionEvent
 

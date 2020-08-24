@@ -12,6 +12,7 @@ repositories {
     maven("https://kotlin.bintray.com/ktor")
     maven("https://dl.bintray.com/votebot/maven")
     maven("https://jitpack.io")
+    maven("https://dl.bintray.com/kordlib/Kord")
 }
 
 dependencies {
@@ -38,6 +39,9 @@ dependencies {
     implementation("net.dv8tion", "JDA", "4.2.0_197") {
         exclude(module = "opus-java")
     }
+
+    // Kord
+    implementation("com.gitlab.kordlib.kord:kord-core:0.6.1")
 
     // Database
     implementation("org.jetbrains.exposed", "exposed-core", "0.25.1")

@@ -1,6 +1,5 @@
-package space.votebot.bot.database
+package space.votebot.bot.data
 
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
@@ -9,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
 
-internal class VoteBotGuildTest {
+internal class VoteBotUserTest {
 
     @BeforeEach
     fun setUp() {
@@ -17,17 +16,16 @@ internal class VoteBotGuildTest {
     }
 
     @Test
-    fun `test findByGuildIdOrNew`() {
+    fun `test findByUserIdOrNew`() {
         transaction {
-            SchemaUtils.create(VoteBotGuilds)
-            val guildId = VoteBotGuilds.insert {
-                it[guildId] = 1337
-                it[prefix] = "votes!"
-                it[disableDefaultPrefix] = true
-            } get VoteBotGuilds.id
+            SchemaUtils.create(VoteBotUsers)
+            val userId = VoteBotUsers.insert {
+                it[userId] = 1337
+                it[locale] = "de"
+            } get VoteBotUsers.id
 
-            val guild = VoteBotGuild.findByGuildIdOrNew(guildId.value)
-            assertNotNull(guild, "guild must not be null")
+            val user = VoteBotUser.findByUserIdOrNew(userId.value)
+            assertNotNull(user, "user must not be null")
         }
     }
 

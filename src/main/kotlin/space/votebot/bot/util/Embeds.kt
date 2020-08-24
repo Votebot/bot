@@ -1,4 +1,4 @@
-package space.votebot.bot.constants
+package space.votebot.bot.util
 
 import com.i18next.java.I18Next
 import space.votebot.bot.command.AbstractCommand

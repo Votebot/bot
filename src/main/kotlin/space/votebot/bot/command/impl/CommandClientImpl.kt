@@ -17,8 +17,8 @@ import space.votebot.bot.command.PermissionHandler
 import space.votebot.bot.command.context.Arguments
 import space.votebot.bot.command.context.Context
 import space.votebot.bot.core.VoteBot
-import space.votebot.bot.database.VoteBotGuild
-import space.votebot.bot.database.VoteBotUser
+import space.votebot.bot.data.VoteBotGuild
+import space.votebot.bot.data.VoteBotUser
 import space.votebot.bot.event.EventSubscriber
 import space.votebot.bot.events.CommandErrorEvent
 import space.votebot.bot.events.CommandExecutedEvent

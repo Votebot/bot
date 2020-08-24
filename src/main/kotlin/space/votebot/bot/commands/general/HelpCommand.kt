@@ -4,7 +4,7 @@ import space.votebot.bot.command.AbstractCommand
 import space.votebot.bot.command.CommandCategory
 import space.votebot.bot.command.context.Context
 import space.votebot.bot.command.permission.Permission
-import space.votebot.bot.constants.Embeds
+import space.votebot.bot.util.Embeds
 
 /**
  * Help command.

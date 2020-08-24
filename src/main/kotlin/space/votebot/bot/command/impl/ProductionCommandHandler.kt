@@ -2,8 +2,8 @@ package space.votebot.bot.command.impl
 
 import mu.KotlinLogging
 import space.votebot.bot.command.context.Context
-import space.votebot.bot.constants.Embeds
-import space.votebot.bot.constants.Emotes
+import space.votebot.bot.util.Embeds
+import space.votebot.bot.util.Emotes
 import space.votebot.bot.dsl.editMessage
 import space.votebot.bot.dsl.sendMessage
 import space.votebot.bot.event.EventSubscriber

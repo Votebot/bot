@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction
 import space.votebot.bot.command.translation.TranslationManager
 import space.votebot.bot.core.Discord
 import space.votebot.bot.core.VoteBot
-import space.votebot.bot.database.VoteBotUser
+import space.votebot.bot.data.VoteBotUser
 import space.votebot.bot.dsl.EmbedConvention
 import space.votebot.bot.dsl.sendMessage
 

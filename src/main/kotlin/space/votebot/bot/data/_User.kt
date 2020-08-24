@@ -1,11 +1,11 @@
-package space.votebot.bot.database
+package space.votebot.bot.data
 
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
-import space.votebot.bot.database.VoteBotUsers.id
-import space.votebot.bot.database.VoteBotUsers.locale
+import space.votebot.bot.data.VoteBotUsers.id
+import space.votebot.bot.data.VoteBotUsers.locale
 import space.votebot.bot.util.SnowflakeUtil
 
 /**

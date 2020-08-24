@@ -8,9 +8,9 @@ import space.votebot.bot.command.CommandCategory
 import space.votebot.bot.command.context.Context
 import space.votebot.bot.command.permission.Permission
 import space.votebot.bot.config.Config
-import space.votebot.bot.constants.Constants
-import space.votebot.bot.constants.Embeds
-import space.votebot.bot.database.VoteBotGuild
+import space.votebot.bot.util.Constants
+import space.votebot.bot.util.Embeds
+import space.votebot.bot.data.VoteBotGuild
 
 class PrefixCommand : AbstractCommand() {
     override val aliases: List<String> = listOf("prefix", "p")
