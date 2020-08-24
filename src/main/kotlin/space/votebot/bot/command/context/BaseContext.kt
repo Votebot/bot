@@ -1,4 +1,4 @@
-package space.votebot.bot
+package space.votebot.bot.command.context
 
 import com.i18next.java.I18Next
 import net.dv8tion.jda.api.EmbedBuilder

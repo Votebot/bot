@@ -105,7 +105,7 @@ class CommandClientImpl(
 
         message.textChannel.sendTyping() // since rest actions are async, we need to wait for send typing to succeed
                 .queue(fun(_: Void?) { // Since Void has a private constructor JDA passes in null, so it has to be nullable even if it is not used
-                    val voteBotUser = transaction { VoteBotUser.findOrCreate(message.author.idLong) }
+                    val voteBotUser = transaction { VoteBotUser.findByUserIdOrCreate(message.author.idLong) }
                     val context = Context(bot, command, arguments, message, this, responseNumber, voteBotUser)
                     if (!permissionHandler.isCovered(
                                     command,

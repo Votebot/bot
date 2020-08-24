@@ -12,7 +12,7 @@ object VoteBotGuilds : IdTable<Long>("guilds") {
     val prefix = varchar("prefix", 5).default("v!")
     val disableDefaultPrefix = bool("disable_default_prefix").default(false)
 
-    override val primaryKey: PrimaryKey = PrimaryKey(id)
+    override val primaryKey = PrimaryKey(id)
 }
 
 class VoteBotGuild(id: EntityID<Long>) : LongEntity(id) {
