@@ -30,7 +30,7 @@ class PrefixCommand : AbstractCommand() {
     override suspend fun execute(context: Context) {
         val translations = context.translations
         val prefix = context.args.requiredArgument(0, context) ?: return
-        if (prefix.length > 5) {
+        if (prefix.length > 10) {
             context.respond(Embeds.error(translations.t("commands.prefix.too_long.title"), translations.t("commands.prefix.too_long.description"))).queue()
             return
         }

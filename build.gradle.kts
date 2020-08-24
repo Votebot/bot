@@ -65,6 +65,7 @@ dependencies {
     testImplementation("org.mockito", "mockito-core", "3.5.2")
     testImplementation("com.nhaarman.mockitokotlin2", "mockito-kotlin", "2.2.0")
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.6.2")
+    implementation("org.junit.jupiter", "junit-jupiter", "5.4.2")
     testImplementation("com.h2database", "h2", "1.4.200")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.6.2")
     testImplementation("org.xerial", "sqlite-jdbc", "3.31.1")
