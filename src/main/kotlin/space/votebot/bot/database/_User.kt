@@ -32,7 +32,7 @@ class VoteBotUser(id: EntityID<Long>) : LongEntity(id) {
         /**
          * Finds a [VoteBotUser] for [id] or creates a new one if necessary.
          */
-        fun findByUserIdOrCreate(id: Long): VoteBotUser = findById(id) ?: new {
+        fun findByUserIdOrNew(id: Long): VoteBotUser = findById(id) ?: new {
             userId = id
         }
     }
