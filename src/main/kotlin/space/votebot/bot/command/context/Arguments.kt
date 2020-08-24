@@ -2,7 +2,7 @@ package space.votebot.bot.command.context
 
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.*
-import space.votebot.bot.constants.Embeds
+import space.votebot.bot.util.Embeds
 import space.votebot.bot.dsl.EmbedConvention
 import space.votebot.bot.util.EntityResolver
 

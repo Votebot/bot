@@ -5,7 +5,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import space.votebot.bot.constants.Constants
 import java.util.concurrent.CompletableFuture
 
 /**

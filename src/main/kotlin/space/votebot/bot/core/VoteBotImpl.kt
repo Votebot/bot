@@ -18,8 +18,8 @@ import space.votebot.bot.commands.settings.LanguageCommand
 import space.votebot.bot.commands.settings.PermissionsCommand
 import space.votebot.bot.commands.settings.PrefixCommand
 import space.votebot.bot.config.Config
-import space.votebot.bot.database.VoteBotGuilds
-import space.votebot.bot.database.VoteBotUsers
+import space.votebot.bot.data.VoteBotGuilds
+import space.votebot.bot.data.VoteBotUsers
 import space.votebot.bot.event.AnnotatedEventManager
 import space.votebot.bot.metrics.DatabaseMetrics
 import space.votebot.bot.metrics.GuildCountMetrics

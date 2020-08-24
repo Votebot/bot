@@ -1,4 +1,4 @@
-package space.votebot.bot.database
+package space.votebot.bot.data
 
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass

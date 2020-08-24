@@ -1,7 +1,7 @@
 package space.votebot.bot.command.translation
 
 import com.i18next.java.I18Next
-import space.votebot.bot.database.VoteBotUser
+import space.votebot.bot.data.VoteBotUser
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
