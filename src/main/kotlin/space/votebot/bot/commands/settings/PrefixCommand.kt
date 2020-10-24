@@ -8,9 +8,9 @@ import space.votebot.bot.command.CommandCategory
 import space.votebot.bot.command.context.Context
 import space.votebot.bot.command.permission.Permission
 import space.votebot.bot.config.Config
-import space.votebot.bot.constants.Constants
-import space.votebot.bot.constants.Embeds
-import space.votebot.bot.database.VoteBotGuild
+import space.votebot.bot.util.Constants
+import space.votebot.bot.util.Embeds
+import space.votebot.bot.data.VoteBotGuild
 
 class PrefixCommand : AbstractCommand() {
     override val aliases: List<String> = listOf("prefix", "p")
@@ -30,7 +30,7 @@ class PrefixCommand : AbstractCommand() {
     override suspend fun execute(context: Context) {
         val translations = context.translations
         val prefix = context.args.requiredArgument(0, context) ?: return
-        if (prefix.length > 5) {
+        if (prefix.length > 10) {
             context.respond(Embeds.error(translations.t("commands.prefix.too_long.title"), translations.t("commands.prefix.too_long.description"))).queue()
             return
         }

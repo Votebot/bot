@@ -22,10 +22,10 @@ import space.votebot.bot.command.context.Context
 import space.votebot.bot.command.impl.CommandClientImpl
 import space.votebot.bot.command.permission.Permission
 import space.votebot.bot.command.permission.PermissionNodes
-import space.votebot.bot.constants.Constants
+import space.votebot.bot.util.Constants
 import space.votebot.bot.core.VoteBot
-import space.votebot.bot.database.VoteBotGuilds
-import space.votebot.bot.database.VoteBotUsers
+import space.votebot.bot.data.VoteBotGuilds
+import space.votebot.bot.data.VoteBotUsers
 import space.votebot.bot.event.AnnotatedEventManager
 import space.votebot.bot.event.EventSubscriber
 import space.votebot.bot.events.CommandErrorEvent
@@ -180,6 +180,7 @@ class CommandTest {
     private fun mockCommand(
             stubbing: KStubbing<AbstractCommand>.() -> Unit
     ) = mock<AbstractCommand> {
+        on { aliases }.thenReturn(listOf("test", "t"))
         on { permission }.thenReturn(Permission.ANY)
         stubbing(this)
     }

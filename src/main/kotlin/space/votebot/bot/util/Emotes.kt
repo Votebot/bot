@@ -1,6 +1,4 @@
-
-
-package space.votebot.bot.constants
+package space.votebot.bot.util
 
 /**
  * Useful collection of Discord emotes.

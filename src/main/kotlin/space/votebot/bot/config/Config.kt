@@ -31,6 +31,8 @@ object Config {
     val environment: Environment =
             Environment.valueOf(dotenv["${PREFIX}ENVIRONMENT"] ?: Environment.PRODUCTION.toString())
 
+    val httpPort: Int = dotenv["${PREFIX}HTTP_PORT"]?.toInt() ?: 3500
+
     /**
      * The Discord Bot token.
      */
@@ -58,7 +60,7 @@ object Config {
     val dbPassword: String = dotenv["${PREFIX}DB_PASSWORD"] ?: "votebot"
 
     /**
-     * The database password.
+     * A list of games for the Bot's status.
      */
     val rawGameAnimatorGames: List<String> = dotenv["${PREFIX}GAMES"]?.run { split(',') }
             ?: listOf("No games")

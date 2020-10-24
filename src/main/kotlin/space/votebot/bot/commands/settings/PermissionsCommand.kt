@@ -12,7 +12,7 @@ import space.votebot.bot.command.permission.Permission
 import space.votebot.bot.command.permission.PermissionNode
 import space.votebot.bot.command.permission.PermissionNodes
 import space.votebot.bot.command.permission.PermissionType
-import space.votebot.bot.constants.Embeds
+import space.votebot.bot.util.Embeds
 
 /**
  * Permissions command (better than iPad).

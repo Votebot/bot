@@ -1,6 +1,4 @@
-
-
-package space.votebot.bot.constants
+package space.votebot.bot.util
 
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl

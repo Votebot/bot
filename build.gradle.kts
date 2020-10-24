@@ -10,8 +10,9 @@ version = "1.0-SNAPSHOT"
 repositories {
     jcenter()
     maven("https://kotlin.bintray.com/ktor")
-    maven("https://dl.bintray.com/votebot/maven" )
+    maven("https://dl.bintray.com/votebot/maven")
     maven("https://jitpack.io")
+    maven("https://dl.bintray.com/kordlib/Kord")
 }
 
 dependencies {
@@ -26,6 +27,7 @@ dependencies {
 
     // Metrics
     implementation("io.ktor:ktor-metrics-micrometer:1.4.1")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.5.5")
 
     // Ktor
     implementation("io.ktor", "ktor-server-netty", "1.4.1")
@@ -37,6 +39,9 @@ dependencies {
     implementation("net.dv8tion", "JDA", "4.2.0_211") {
         exclude(module = "opus-java")
     }
+
+    // Kord
+    implementation("com.gitlab.kordlib.kord:kord-core:0.6.1")
 
     // Database
     implementation("org.jetbrains.exposed", "exposed-core", "0.28.1")

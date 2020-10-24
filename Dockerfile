@@ -1,9 +1,9 @@
-FROM gradle AS build
+FROM gradle AS builder
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN gradle clean shadowJar --no-daemon
+RUN gradle installDist -Dorg.gradle.daemon=false
 
 FROM adoptopenjdk:openj9
-RUN mkdir /app
-COPY --from=build /home/gradle/src/build/libs/*.jar /app/bot.jar
-CMD ["java", "-server", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-XX:InitialRAMFraction=2", "-XX:MinRAMFraction=2", "-XX:MaxRAMFraction=2", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=100", "-XX:+UseStringDeduplication", "-jar", "bot.jar"]
+WORKDIR /opt/VoteBot
+COPY --from=builder /home/gradle/src/build/install/VoteBot /opt/VoteBot/
+CMD ["/opt/VoteBot/bin/VoteBot", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-XX:InitialRAMFraction=2", "-XX:MinRAMFraction=2", "-XX:MaxRAMFraction=2", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=100", "-XX:+UseStringDeduplication"]

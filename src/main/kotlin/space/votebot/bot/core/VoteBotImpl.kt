@@ -18,9 +18,12 @@ import space.votebot.bot.commands.settings.LanguageCommand
 import space.votebot.bot.commands.settings.PermissionsCommand
 import space.votebot.bot.commands.settings.PrefixCommand
 import space.votebot.bot.config.Config
-import space.votebot.bot.database.VoteBotGuilds
-import space.votebot.bot.database.VoteBotUsers
+import space.votebot.bot.data.VoteBotGuilds
+import space.votebot.bot.data.VoteBotUsers
 import space.votebot.bot.event.AnnotatedEventManager
+import space.votebot.bot.metrics.DatabaseMetrics
+import space.votebot.bot.metrics.GuildCountMetrics
+import space.votebot.bot.web.KtorServer
 
 internal class VoteBotImpl(private val config: Config) : VoteBot {
 
@@ -33,8 +36,11 @@ internal class VoteBotImpl(private val config: Config) : VoteBot {
     override val commandClient: CommandClient = CommandClientImpl(this, Config.defaultPrefix)
 
     init {
+        KtorServer(config.httpPort)
         dataSource = initDatabase()
+        DatabaseMetrics(dataSource)
         discord = Discord(config.discordToken, httpClient, eventManager, this)
+        GuildCountMetrics(discord.shardManager)
         gameAnimator = GameAnimator(discord, config)
 
         eventManager.register(commandClient)

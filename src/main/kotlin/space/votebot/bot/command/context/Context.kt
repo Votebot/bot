@@ -5,8 +5,9 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction
 import space.votebot.bot.command.AbstractCommand
 import space.votebot.bot.command.CommandClient
 import space.votebot.bot.constants.Embeds
+import space.votebot.bot.util.Embeds
 import space.votebot.bot.core.VoteBot
-import space.votebot.bot.database.VoteBotUser
+import space.votebot.bot.data.VoteBotUser
 
 /**
  * Representation of a context of a command execution.

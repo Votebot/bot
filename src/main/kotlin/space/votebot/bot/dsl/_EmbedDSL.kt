@@ -1,5 +1,3 @@
-
-
 @file:Suppress("unused")
 
 package space.votebot.bot.dsl
@@ -127,7 +125,7 @@ EmbedConvention {
      * @return whether the field was added or not
      */
     fun addField(name: String?, value: String?, inline: Boolean = false): Boolean =
-        addField(EmbedField(name, value, inline))
+            addField(EmbedField(name, value, inline))
 
     /**
      * Adds a blank field to the embed.
@@ -136,7 +134,7 @@ EmbedConvention {
      * @return whether the field was added or not
      */
     fun addBlankField(inline: Boolean = false): Boolean =
-        addField(EmbedField(EmbedBuilder.ZERO_WIDTH_SPACE, EmbedBuilder.ZERO_WIDTH_SPACE, inline))
+            addField(EmbedField(EmbedBuilder.ZERO_WIDTH_SPACE, EmbedBuilder.ZERO_WIDTH_SPACE, inline))
 
     /**
      * Returns a [Color] for the specified [rgb].
@@ -200,4 +198,4 @@ fun MessageChannel.sendMessage(embedConvention: EmbedConvention): MessageAction 
  * @see embed
  */
 fun Message.editMessage(embedConvention: EmbedConvention): MessageAction =
-    editMessage(embedConvention.toEmbedBuilder().build())
+        editMessage(embedConvention.toEmbedBuilder().build())

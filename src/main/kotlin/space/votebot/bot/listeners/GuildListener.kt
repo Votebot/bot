@@ -5,8 +5,8 @@ import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.api.hooks.SubscribeEvent
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
-import space.votebot.bot.database.VoteBotGuild
-import space.votebot.bot.database.VoteBotGuilds
+import space.votebot.bot.data.VoteBotGuild
+import space.votebot.bot.data.VoteBotGuilds
 
 class GuildListener {
 

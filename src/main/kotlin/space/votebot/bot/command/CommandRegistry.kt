@@ -12,7 +12,7 @@ interface CommandRegistry<T : AbstractCommand> {
         get() = commandAssociations.values.distinct()
 
     private fun registerCommand(command: T) =
-        command.aliases.associateWithTo(commandAssociations) { command }
+            command.aliases.associateWithTo(commandAssociations) { command }
 
     /**
      * Registers the [commands].
