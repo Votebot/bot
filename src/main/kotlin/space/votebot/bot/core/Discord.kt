@@ -23,18 +23,23 @@ class Discord(discordToken: String, httpClient: OkHttpClient, eventManager: IEve
 
     private val log = KotlinLogging.logger {}
 
-    val shardManager: ShardManager = DefaultShardManagerBuilder.createDefault(discordToken)
+    private val shardManagerBuilder: DefaultShardManagerBuilder = DefaultShardManagerBuilder.createDefault(discordToken)
             .setEventManagerProvider { eventManager }
             .setHttpClient(httpClient)
             .setStatus(OnlineStatus.DO_NOT_DISTURB)
             .setActivity(Activity.playing("Starting ..."))
             .addEventListeners(this, ShardWatcher(bot))
-            .build()
+
+    lateinit var shardManager: ShardManager
 
     init {
         RestAction.setDefaultFailure {
             restActionLogger.error(it) { "An error occurred while executing restaction." }
         }
+    }
+
+    fun start() {
+        shardManager = shardManagerBuilder.build()
     }
 
     /**
