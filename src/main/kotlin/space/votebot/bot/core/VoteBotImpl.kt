@@ -40,8 +40,9 @@ internal class VoteBotImpl(private val config: Config) : VoteBot {
         dataSource = initDatabase()
         DatabaseMetrics(dataSource)
         discord = Discord(config.discordToken, httpClient, eventManager, this)
-        GuildCountMetrics(discord.shardManager)
         gameAnimator = GameAnimator(discord, config)
+        discord.start()
+        GuildCountMetrics(discord.shardManager)
 
         eventManager.register(commandClient)
         if (debugMode) {

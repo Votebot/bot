@@ -63,7 +63,7 @@ object Config {
      * A list of games for the Bot's status.
      */
     val rawGameAnimatorGames: List<String> = dotenv["${PREFIX}GAMES"]?.run { split(',') }
-            ?: listOf("No games")
+            ?: listOf("online:default:VoteBot", "online:listening:%users% users")
 
     /**
      * The default prefix
