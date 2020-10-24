@@ -60,18 +60,6 @@ internal class VoteBotImpl(private val config: Config) : VoteBot {
         return dataSource
     }
 
-   /* private suspend fun initMetrics() {
-        coroutineScope {
-            // If metrics are disabled we usually just pass the no-op InfluxDBConnection. But as these are constantly
-            // running we do this double check here.
-            if (config.environment.debug && config.enableMetrics || !config.environment.debug && config.enableMetrics) {
-                launch { MemoryMetrics(influx).start() }
-                launch { DatabaseMetrics(dataSource, influx).start() }
-                launch { GuildCountMetrics(discord.shardManager, influx).start() }
-            }
-        }
-    }*/
-
     private fun registerCommands() {
         commandClient.registerCommands(
                 HelpCommand(),
@@ -81,9 +69,5 @@ internal class VoteBotImpl(private val config: Config) : VoteBot {
                 LanguageCommand(),
                 PermissionsCommand()
         )
-    }
-
-    suspend fun start() {
-        // initMetrics()
     }
 }
