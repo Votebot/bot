@@ -23,5 +23,5 @@ suspend fun main() {
         Sentry.init()
     }
 
-    VoteBot(Config).start()
+    VoteBot(Config)
 }

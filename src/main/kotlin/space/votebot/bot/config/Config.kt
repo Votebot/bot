@@ -32,31 +32,6 @@ object Config {
             Environment.valueOf(dotenv["${PREFIX}ENVIRONMENT"] ?: Environment.PRODUCTION.toString())
 
     /**
-     * Whether metric exporting should be enabled-
-     */
-    val enableMetrics: Boolean = dotenv["${PREFIX}ENABLE_METRICS"]?.toBoolean() ?: true
-
-    /**
-     * The host address of InfluxDB.
-     */
-    val influxDbAddress: String = dotenv["${PREFIX}INFLUXDB_ADDRESS"] ?: "http://localhost:9999"
-
-    /**
-     * The token for InfluxDB.
-     */
-    val influxDbToken: String = dotenv["${PREFIX}INFLUXDB_TOKEN"] ?: ""
-
-    /**
-     * The InfluxDB organization name.
-     */
-    val influxDbOrg: String = dotenv["${PREFIX}INFLUXDB_ORG"] ?: ""
-
-    /**
-     * The InfluxDB bucket name.
-     */
-    val influxDbBucket: String = dotenv["${PREFIX}INFLUXDB_BUCKET"] ?: ""
-
-    /**
      * The Discord Bot token.
      */
     val discordToken: String = dotenv["${PREFIX}DISCORD_TOKEN"] ?: ""
@@ -75,12 +50,12 @@ object Config {
     /**
      * The database user.
      */
-    val dbUser: String = dotenv["${PREFIX}DB_USER"] ?: "postgres"
+    val dbUser: String = dotenv["${PREFIX}DB_USER"] ?: "votebot"
 
     /**
      * The database password.
      */
-    val dbPassword: String = dotenv["${PREFIX}DB_PASSWORD"] ?: "postgres"
+    val dbPassword: String = dotenv["${PREFIX}DB_PASSWORD"] ?: "votebot"
 
     /**
      * The database password.
