@@ -15,7 +15,10 @@ suspend fun main() {
     rootLogger.level = logLevel
 
     if (Config.environment != Environment.DEVELOPMENT) {
-        Sentry.init(Config.sentryDSN)
+        Sentry.init {
+            it.dsn = Config.sentryDSN
+            it.environment = Config.environment.name
+        }
     } else {
         Sentry.init()
     }
