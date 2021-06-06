@@ -43,7 +43,7 @@ object Embeds {
      * @see EmbedBuilder
      */
     fun info(title: String, description: String? = null, builder: EmbedCreator = {}): EmbedBuilder =
-        EmbedBuilder().apply {
+        embed {
             title(Emotes.INFO, title)
             this.description = description
             color = Colors.BLUE
@@ -59,7 +59,7 @@ object Embeds {
         description: String? = null,
         builder: EmbedCreator = {}
     ): EmbedBuilder =
-        EmbedBuilder().apply {
+        embed {
             title(Emotes.SUCCESS, title)
             this.description = description
             color = Colors.LIGHT_GREEN
@@ -75,7 +75,7 @@ object Embeds {
         description: String? = null,
         builder: EmbedCreator = {}
     ): EmbedBuilder =
-        EmbedBuilder().apply {
+        embed {
             title(Emotes.ERROR, title)
             this.description = description
             color = Colors.LIGHT_RED
@@ -91,7 +91,7 @@ object Embeds {
         description: String? = null,
         builder: EmbedCreator = {}
     ): EmbedBuilder =
-        EmbedBuilder().apply {
+        embed {
             title(Emotes.WARN, title)
             this.description = description
             color = Colors.YELLOW
@@ -107,61 +107,11 @@ object Embeds {
         description: String?,
         builder: EmbedCreator = {}
     ): EmbedBuilder =
-        EmbedBuilder().apply {
+        embed {
             title(Emotes.LOADING, title)
             this.description = description
             color = Colors.DARK_BUT_NOT_BLACK
         }.apply(builder)
-
-/*
-    */
-    /**
-     * Creates a help embed for [command].
-     *//*
-    fun command(command: DescriptiveCommand, processor: CommandProcessor): EmbedBuilder {
-        val children =
-            processor.commands.filterValues { (it.aliasInfo as? AliasInfo.Child<*>)?.parent == command }.keys
-        return info("${command.name} - Hilfe", command.description) {
-            if (children.isNotEmpty()) {
-                field {
-                    name = "Aliase"
-                    value = children.joinToString("`, `", "`", "`")
-                }
-            }
-            field {
-                name = "Usage"
-                value = formatCommandUsage(command)
-            }
-            field {
-                name = "Permission"
-                value = command.permission.toString()
-            }
-//            addField("Permission", command.permission.name)
-//            val subCommands = command.registeredCommands.map(::formatSubCommandUsage)
-//            if (subCommands.isNotEmpty()) {
-//                addField("Sub commands", subCommands.joinToString("\n"))
-//            }
-        }
-    }*/
-
-    /*private fun formatCommandUsage(command: Command<*>): String {
-        val usage = command.arguments.joinToString(" ") {
-            if ("optional" in it.toString()) "[${it.name}]" else "<${it.name}>"
-        }
-
-        return "!${command.name} $usage"
-    }*/
-//
-//    private fun formatSubCommandUsage(command: AbstractSubCommand): String {
-//        val builder = StringBuilder(Constants.firstPrefix)
-//        builder.append(' ').append(command.name).append(' ').append(command.usage.replace("\n", "\\n"))
-//
-//        val prefix = " ${command.parent.name} "
-//        builder.insert(Constants.firstPrefix.length, prefix)
-//        builder.append(" - ").append(command.description)
-//
-//        return builder.toString()
-//    }
 
     private fun EmbedBuilder.title(emote: String, title: String) {
         this.title = "$emote $title"
@@ -192,20 +142,4 @@ object Embeds {
             embed = base
         }
     }
-
-/*
-    */
-    /**
-     * Responds to this command with an embed provided by [base] and applies [creator] to it
-     *//*
-    @Deprecated("Use sendResponse instead", ReplaceWith("sendResponse(base, creator)"))
-    suspend fun KordEvent.respondEmbed(
-        base: EmbedBuilder,
-        creator: suspend EmbedBuilder.() -> Unit = {}
-    ): Message {
-        return respond {
-            creator(base)
-            embed = base
-        }
-    }*/
 }
