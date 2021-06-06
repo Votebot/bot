@@ -22,6 +22,7 @@ package dev.schlaubi.votebot.commands
 import dev.schlaubi.votebot.command.SingleCommand
 import dev.schlaubi.votebot.command.context.Context
 import dev.schlaubi.votebot.command.context.response.respond
+import dev.schlaubi.votebot.command.context.response.respondEmbed
 import dev.schlaubi.votebot.util.Embeds
 
 object InfoCommand : SingleCommand() {

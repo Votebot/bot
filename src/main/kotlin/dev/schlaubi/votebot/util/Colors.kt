@@ -27,15 +27,8 @@ import dev.kord.common.Color
 @Suppress("KDocMissingDocumentation", "unused", "MagicNumber")
 object Colors {
     // Discord
-    val BLURLPLE: Color = Color(88, 101, 242)
-    val GREEN: Color = Color(87, 242, 135)
-    val YELLOW: Color = Color(254, 231, 92)
-    val FUCHSIA: Color = Color(235, 69, 158)
-    val RED: Color = Color(237, 66, 69)
-    val WHITE: Color = Color(255, 255, 255)
-    val BLACK: Color = Color(0, 0, 0)
-
-    // Old Discord Branding Colors
+    val BLURLPLE: Color = Color(114, 137, 218)
+    val FULL_WHITE: Color = Color(255, 255, 255)
     val GREYPLE: Color = Color(153, 170, 181)
     val DARK_BUT_NOT_BLACK: Color = Color(44, 47, 51)
     val NOT_QUITE_BLACK: Color = Color(33, 39, 42)
@@ -46,4 +39,5 @@ object Colors {
     val LIGHT_GREEN: Color = Color(46, 204, 113)
     val DARK_GREEN: Color = Color(39, 174, 96)
     val BLUE: Color = Color(52, 152, 219)
+    val YELLOW: Color = Color(241, 196, 15)
 }

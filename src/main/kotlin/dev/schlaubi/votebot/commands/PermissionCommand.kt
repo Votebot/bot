@@ -108,7 +108,7 @@ suspend fun doPermissions(
 
     val command = commands.firstOrNull { it.name == commandName }
     if (command == null) {
-        context.respond(Embeds.error("Unknown command"))
+        context.respond(Embeds.error("Unknown command", description = null))
         return
     }
 

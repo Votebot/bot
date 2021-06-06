@@ -36,7 +36,7 @@ object ClaimPermissionsCommand : SingleCommand() {
 
     override suspend fun execute(context: Context) {
         if (Permission.Administrator !in context.executor.asMember().getPermissions()) {
-            context.respond(Embeds.error("You need the `ADMINISTRATOR` permission to execute this command"))
+            context.respond(Embeds.error("You need the `ADMINISTRATOR` permission to execute this command", description = null))
             return
         }
 
