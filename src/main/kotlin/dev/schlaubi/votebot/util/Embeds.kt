@@ -62,7 +62,7 @@ object Embeds {
         embed {
             title(Emotes.SUCCESS, title)
             this.description = description
-            color = Colors.LIGHT_GREEN
+            color = Colors.GREEN
         }.apply(builder)
 
     /**
@@ -78,7 +78,7 @@ object Embeds {
         embed {
             title(Emotes.ERROR, title)
             this.description = description
-            color = Colors.LIGHT_RED
+            color = Colors.RED
         }.apply(builder)
 
     /**
