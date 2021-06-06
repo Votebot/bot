@@ -1,5 +1,5 @@
 /*
- * VoteBot - A feature-rich bot to create votes on Discord guilds.
+ * Votebot - A feature-rich bot to create votes on Discord guilds.
  *
  * Copyright (C) 2019-2021  Michael Rittmeister & Yannick Seeger
  *
@@ -17,7 +17,11 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package dev.schlaubi.votebot
+package dev.schlaubi.votebot.command.context.response
 
-class VoteBot {
+import dev.kord.rest.builder.message.MessageModifyBuilder
+
+internal object NonEditableResponse : Responder.EditableResponse {
+    override suspend fun edit(builder: MessageModifyBuilder.() -> Unit): Responder.EditableResponse =
+        throw UnsupportedOperationException("This type of message does not support editing")
 }

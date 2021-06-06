@@ -21,24 +21,33 @@ package dev.schlaubi.votebot
 
 import ch.qos.logback.classic.Logger
 import dev.schlaubi.votebot.config.Config
-import dev.schlaubi.votebot.config.Environment
 import io.sentry.Sentry
 import io.sentry.SentryOptions
+import mu.KotlinLogging
 import org.slf4j.LoggerFactory
+import dev.schlaubi.votebot.core.VoteBotImpl as VoteBot
+
+private val LOG = KotlinLogging.logger { }
 
 suspend fun main() {
     initializeLogging()
     initializeSentry()
+
+    VoteBot().start()
 }
 
 private fun initializeLogging() {
     val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as Logger
     rootLogger.level = Config.LOG_LEVEL
+
+    Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+        LOG.error(throwable) { "Got unhandled error on $thread" }
+    }
 }
 
 private fun initializeSentry() {
     val configure: (SentryOptions) -> Unit =
-        if (Config.ENVIRONMENT != Environment.DEVELOPMENT) {
+        if (Config.ENVIRONMENT.useSentry) {
             { it.dsn = Config.SENTRY_TOKEN; }
         } else {
             { it.dsn = "" }

@@ -20,16 +20,70 @@
 package dev.schlaubi.votebot.config
 
 import ch.qos.logback.classic.Level
+import dev.kord.common.entity.Snowflake
+import dev.schlaubi.envconf.environment
 import dev.schlaubi.envconf.getEnv
+import dev.schlaubi.votebot.command.CommandErrorHandler
+import dev.schlaubi.votebot.command.internal.DebugErrorHandler
 
+/**
+ * Environment based config.
+ *
+ * **Note:** All Properties are resolved by looking up the environment variable with the same name as the property
+ */
 object Config {
+
+    /**
+     * The Discord bot token.
+     */
+    val DISCORD_TOKEN by environment
+
+    /**
+     * The id of the dev guild if using [Environment.DEVELOPMENT].
+     */
+    val DEV_GUILD by getEnv { Snowflake(it) }.optional()
+
+    /**
+     * The Environment this instance runs in.
+     *
+     * @see Environment
+     */
     val ENVIRONMENT by getEnv("", Environment.PRODUCTION, Environment::valueOf)
+
+    /**
+     * The LOG level of the root logger.
+     */
     val LOG_LEVEL: Level by getEnv(default = Level.INFO) { Level.toLevel(it) }
 
+    /**
+     *  The Sentry DSN.
+     */
     val SENTRY_TOKEN by getEnv().optional()
 }
 
-enum class Environment(val useSentry: Boolean = true) {
-    PRODUCTION,
-    DEVELOPMENT(false)
+/**
+ * Environmentally based settings.
+ *
+ * @property useGlobalCommands whether this should use only guild commands on [Config.DEV_GUILD] or global commands
+ * @property useSentry whether sentry error logging is enabled or not
+ * @property errorHandler the [CommandErrorHandler] used in this environment
+ */
+enum class Environment(
+    val useGlobalCommands: Boolean = true,
+    val useSentry: Boolean = true,
+    val errorHandler: CommandErrorHandler
+) {
+    /**
+     * Production environment:
+     * - Global commands
+     * - Sentry error handling
+     */
+    PRODUCTION(errorHandler = DebugErrorHandler),
+
+    /**
+     * Development environment:
+     * - no sentry
+     * - guild commands on [Config.DEV_GUILD]
+     */
+    DEVELOPMENT(false, false, DebugErrorHandler)
 }
