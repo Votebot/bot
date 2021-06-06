@@ -29,7 +29,8 @@ import dev.kord.rest.builder.interaction.PublicFollowupMessageCreateBuilder
 import dev.kord.rest.builder.message.MessageCreateBuilder
 import dev.kord.rest.builder.message.MessageModifyBuilder
 
-internal class PublicResponseStrategy(private val ack: PublicInteractionResponseBehavior) : FollowUpResponseStrategy(),
+internal class PublicResponseStrategy(private val ack: PublicInteractionResponseBehavior) :
+    FollowUpResponseStrategy(),
     Responder {
     override suspend fun internalFollowUp(builder: PublicFollowupMessageCreateBuilder.() -> Unit): PublicFollowupMessage =
         ack.followUp(builder)
@@ -49,7 +50,6 @@ internal class PublicResponseStrategy(private val ack: PublicInteractionResponse
 
         return MessageEditableResponse(response)
     }
-
 
     private class MessageEditableResponse(private val sentMessage: Message) : Responder.EditableResponse {
         override suspend fun edit(builder: MessageModifyBuilder.() -> Unit): Responder.EditableResponse {

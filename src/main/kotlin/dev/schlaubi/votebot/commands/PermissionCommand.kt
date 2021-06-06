@@ -31,10 +31,12 @@ import dev.schlaubi.votebot.util.appendPermission
 import dev.schlaubi.votebot.util.buildCommands
 import kotlinx.coroutines.flow.firstOrNull
 
-object PermissionCommand : RootCommand(buildCommands {
-    addCommand(RoleCommand())
-    addCommand(UserCommand())
-}) {
+object PermissionCommand : RootCommand(
+    buildCommands {
+        addCommand(RoleCommand())
+        addCommand(UserCommand())
+    }
+) {
     override val name: String = "permissions"
     override val defaultPermission: Boolean = false
     override val description: String = "Allows you to manage the bots permissions"
