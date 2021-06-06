@@ -23,6 +23,7 @@ import dev.kord.common.entity.Permission
 import dev.schlaubi.votebot.command.SingleCommand
 import dev.schlaubi.votebot.command.context.Context
 import dev.schlaubi.votebot.command.context.response.respond
+import dev.schlaubi.votebot.util.Embeds
 import dev.schlaubi.votebot.util.appendPermission
 import dev.schlaubi.votebot.util.getCommands
 import kotlinx.coroutines.flow.first
@@ -35,7 +36,7 @@ object ClaimPermissionsCommand : SingleCommand() {
 
     override suspend fun execute(context: Context) {
         if (Permission.Administrator !in context.executor.asMember().getPermissions()) {
-            context.respond("You need the `ADMINISTRATOR` permission to execute this command")
+            context.respond(Embeds.error("You need the `ADMINISTRATOR` permission to execute this command"))
             return
         }
 
@@ -49,6 +50,6 @@ object ClaimPermissionsCommand : SingleCommand() {
             user(context.executor.id, true)
         }
 
-        context.respond("You now have access to /permissions")
+        context.respond(Embeds.info("You now have access to /permissions"))
     }
 }
