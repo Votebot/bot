@@ -21,11 +21,10 @@ package dev.schlaubi.votebot.util
 
 import dev.kord.core.behavior.MessageBehavior
 import dev.kord.core.behavior.channel.MessageChannelBehavior
+import dev.kord.core.behavior.channel.createMessage
 import dev.kord.core.behavior.edit
 import dev.kord.core.entity.Message
 import dev.kord.rest.builder.message.EmbedBuilder
-import dev.kord.core.behavior.channel.createMessage
-
 
 /**
  * Defines a creator of an embed.
@@ -193,7 +192,6 @@ object Embeds {
             embed = base
         }
     }
-
 
 /*
     */

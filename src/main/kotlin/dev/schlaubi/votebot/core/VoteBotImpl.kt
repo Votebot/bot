@@ -19,7 +19,6 @@
 
 package dev.schlaubi.votebot.core
 
-import dev.kord.common.entity.PresenceStatus
 import dev.kord.core.Kord
 import dev.schlaubi.votebot.command.RegistrableCommand
 import dev.schlaubi.votebot.command.internal.CommandExecutor
