@@ -20,8 +20,15 @@
 package dev.schlaubi.votebot.util
 
 import dev.schlaubi.votebot.config.Config
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
-suspend fun <T> whenUsingSentry(block: suspend () -> T): T? {
+@OptIn(ExperimentalContracts::class)
+inline fun <T> whenUsingSentry(block: () -> T): T? {
+    contract {
+        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+    }
     return if (Config.ENVIRONMENT.useSentry)
         block()
     else null
