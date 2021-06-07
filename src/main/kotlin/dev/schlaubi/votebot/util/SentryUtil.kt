@@ -17,21 +17,12 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package dev.schlaubi.votebot.command.internal
+package dev.schlaubi.votebot.util
 
-import dev.schlaubi.votebot.command.CommandErrorHandler
-import dev.schlaubi.votebot.command.context.Context
-import dev.schlaubi.votebot.command.context.response.followUp
-import mu.KotlinLogging
-import kotlin.coroutines.CoroutineContext
+import dev.schlaubi.votebot.config.Config
 
-object DebugErrorHandler : CommandErrorHandler {
-    private val LOG = KotlinLogging.logger { }
-    override suspend fun handleCommandError(
-        context: Context,
-        coroutineContext: CoroutineContext,
-        throwable: Throwable
-    ) {
-        context.followUp("An error occurred whilst handling this command! Please view the logs for more: `${throwable::class.simpleName}${throwable.message}`")
-    }
+suspend fun <T> whenUsingSentry(block: suspend () -> T): T? {
+    return if (Config.ENVIRONMENT.useSentry)
+        block()
+    else null
 }

@@ -24,7 +24,8 @@ import dev.kord.common.entity.Snowflake
 import dev.schlaubi.envconf.environment
 import dev.schlaubi.envconf.getEnv
 import dev.schlaubi.votebot.command.CommandErrorHandler
-import dev.schlaubi.votebot.command.internal.DebugErrorHandler
+import dev.schlaubi.votebot.command.internal.errorhandling.DebugErrorHandler
+import dev.schlaubi.votebot.command.internal.errorhandling.ProductionErrorHandler
 
 /**
  * Environment based config.
@@ -78,7 +79,7 @@ enum class Environment(
      * - Global commands
      * - Sentry error handling
      */
-    PRODUCTION(errorHandler = DebugErrorHandler),
+    PRODUCTION(errorHandler = ProductionErrorHandler),
 
     /**
      * Development environment:
