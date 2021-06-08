@@ -19,16 +19,23 @@ jobs:
       - name: Test with Gradle
         run: ./gradlew test ktlintCheck
       - name: Build with Gradle
+        run: ./gradlew classes
+      - name: Make Distribution with Gradle
+        if: github.ref == 'refs/heads/main'
         run: ./gradlew installDist
       - name: Login
+        if: github.ref == 'refs/heads/main'
         env:
           GITHUB_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-        run:  docker login ghcr.io --username ci --password "$GITHUB_TOKEN"
+        run: docker login ghcr.io --username ci --password "$GITHUB_TOKEN"
       - name: Build & Tag
-        run:  docker build -t ghcr.io/votebot/votebot/bot:latest -t ghcr.io/votebot/votebot/bot:"$GITHUB_SHA" .
+        if: github.ref == 'refs/heads/main'
+        run: docker build -t ghcr.io/votebot/votebot/bot:latest -t ghcr.io/votebot/votebot/bot:"$GITHUB_SHA" .
       - name: Push
-        run:  docker push ghcr.io/votebot/votebot/bot:latest
+        if: github.ref == 'refs/heads/main'
+        run: docker push ghcr.io/votebot/votebot/bot:latest
       - name: Push specific tag
+        if: github.ref == 'refs/heads/main'
         run: docker push ghcr.io/votebot/votebot/bot:"$GITHUB_SHA"
       - name: Create Sentry Release
         if: github.ref == 'refs/heads/main'
