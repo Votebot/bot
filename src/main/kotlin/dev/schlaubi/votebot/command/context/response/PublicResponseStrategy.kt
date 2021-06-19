@@ -40,7 +40,7 @@ internal class PublicResponseStrategy(private val ack: PublicInteractionResponse
         val response = ack.edit {
             content = message.content
             message.embed?.let {
-                embeds = mutableListOf(it)
+                embeds.add(it)
             }
             allowedMentions = message.allowedMentions
             message.files.forEach { (name, inputStream) ->

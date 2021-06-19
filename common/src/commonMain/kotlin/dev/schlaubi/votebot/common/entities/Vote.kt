@@ -76,7 +76,6 @@ public interface BaseVote<ID> {
         val user: Long,
         val answers: List<Int>
     )
-
 }
 
 /**

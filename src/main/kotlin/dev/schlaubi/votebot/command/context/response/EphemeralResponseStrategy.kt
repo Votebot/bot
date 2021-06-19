@@ -20,9 +20,8 @@
 package dev.schlaubi.votebot.command.context.response
 
 import dev.kord.common.annotation.KordUnsafe
-import dev.kord.common.entity.optional.Optional
 import dev.kord.core.behavior.interaction.EphemeralInteractionResponseBehavior
-import dev.kord.core.behavior.interaction.followUp
+import dev.kord.core.behavior.interaction.followUpPublic
 import dev.kord.core.entity.interaction.PublicFollowupMessage
 import dev.kord.rest.builder.interaction.PublicFollowupMessageCreateBuilder
 import dev.kord.rest.builder.message.MessageCreateBuilder
@@ -36,7 +35,7 @@ internal class EphemeralResponseStrategy(private val ack: EphemeralInteractionRe
         val embeds = listOfNotNull(message.embed?.toRequest())
         val request = InteractionResponseModifyRequest(
             message.content.optional(),
-            Optional.missingOnEmpty(embeds),
+            embeds,
             message.allowedMentions?.build().optional()
         )
 
@@ -47,5 +46,5 @@ internal class EphemeralResponseStrategy(private val ack: EphemeralInteractionRe
 
     @OptIn(KordUnsafe::class)
     override suspend fun internalFollowUp(builder: PublicFollowupMessageCreateBuilder.() -> Unit): PublicFollowupMessage =
-        ack.followUp(builder)
+        ack.followUpPublic(builder)
 }

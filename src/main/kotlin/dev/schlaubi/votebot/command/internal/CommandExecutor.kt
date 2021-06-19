@@ -54,11 +54,13 @@ class CommandExecutor(
     private val listener = bot.kord.on<InteractionCreateEvent> { handle() }
 
     private suspend fun InteractionCreateEvent.handle() {
-        val interactionCommand = interaction.command
         if (interaction !is GuildInteraction) {
-            interaction.respondEphemeral("You cannot use this bot in your DMs")
+            interaction.respondEphemeral {
+                content = "You cannot use this bot in your DMs"
+            }
             return
         }
+        val interactionCommand = (interaction as GuildInteraction).command
 
         val command = commands[interactionCommand.rootName] ?: return
 
@@ -73,7 +75,7 @@ class CommandExecutor(
         val responseStrategy: Responder = if (foundCommand.useEphemeral) {
             EphemeralResponseStrategy(interaction.acknowledgeEphemeral())
         } else {
-            PublicResponseStrategy(interaction.ackowledgePublic())
+            PublicResponseStrategy(interaction.acknowledgePublic())
         }
 
         val context = ContextImpl(

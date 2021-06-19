@@ -21,6 +21,10 @@ plugins {
     java
 }
 
+repositories {
+    mavenCentral()
+}
+
 sourceSets {
     main {
         resources.srcDir("resources")

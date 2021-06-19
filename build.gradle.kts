@@ -35,7 +35,6 @@ repositories {
     maven("https://schlaubi.jfrog.io/artifactory/envconf")
 }
 
-
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
@@ -71,7 +70,6 @@ dependencies {
     implementation("ch.qos.logback", "logback-classic", "1.3.0-alpha5")
     implementation("io.sentry", "sentry", "4.3.0")
     implementation("io.sentry", "sentry-logback", "4.3.0")
-
 }
 
 tasks {

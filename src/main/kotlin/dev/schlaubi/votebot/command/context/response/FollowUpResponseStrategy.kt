@@ -33,12 +33,10 @@ internal sealed class FollowUpResponseStrategy : Responder {
         val response = internalFollowUp {
             content = message.content
             message.embed?.let {
-                embeds = mutableListOf(it.toRequest())
+                embeds.add(it)
             }
-            allowedMentions = message.allowedMentions?.build()
-            message.files.forEach { (name, inputStream) ->
-                addFile(name, inputStream)
-            }
+            allowedMentions = message.allowedMentions
+            files.addAll(message.files)
         }
 
         return PublicFollowUpEditableResponse(response)
@@ -51,7 +49,7 @@ internal sealed class FollowUpResponseStrategy : Responder {
             response.edit {
                 content = message.content
                 message.embed?.let {
-                    embeds = mutableListOf(it)
+                    embeds.add(it)
                 }
                 allowedMentions = message.allowedMentions
             }

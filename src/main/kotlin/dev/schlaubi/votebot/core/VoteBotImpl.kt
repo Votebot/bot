@@ -29,6 +29,7 @@ import dev.schlaubi.votebot.config.Config
 import dev.schlaubi.votebot.util.addCommand
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.CoroutineContext
 
 internal class VoteBotImpl : VoteBot {
@@ -38,6 +39,10 @@ internal class VoteBotImpl : VoteBot {
     private lateinit var commandExecutor: CommandExecutor
     override val commands: Map<String, RegistrableCommand>
         get() = commandExecutor.commands
+
+    init {
+        Runtime.getRuntime().addShutdownHook(Thread(this::close))
+    }
 
     suspend fun start() {
         kord = Kord(Config.DISCORD_TOKEN)
@@ -54,5 +59,9 @@ internal class VoteBotImpl : VoteBot {
         addCommand(InfoCommand)
         addCommand(PermissionCommand)
         addCommand(ClaimPermissionsCommand)
+    }
+
+    fun close() = runBlocking {
+        commandExecutor.close()
     }
 }

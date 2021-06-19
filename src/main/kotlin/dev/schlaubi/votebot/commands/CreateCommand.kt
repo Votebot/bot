@@ -52,7 +52,6 @@ object CreateCommand : RootCommand(
             VoteBotBundle.getMessage("commands.create.multi.description")
 
         override fun SubCommandBuilder.addAdditionalArguments() {
-
         }
 
         override suspend fun execute(context: Context) {
