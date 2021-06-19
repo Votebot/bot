@@ -1,5 +1,5 @@
 /*
- * VoteBot - A feature-rich bot to create votes on Discord guilds.
+ * Votebot - A feature-rich bot to create votes on Discord guilds.
  *
  * Copyright (C) 2019-2021  Michael Rittmeister & Yannick Seeger
  *
@@ -17,19 +17,20 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package dev.schlaubi.votebot.commands
+package dev.schlaubi.votebot.util
 
-import dev.schlaubi.votebot.command.SingleCommand
-import dev.schlaubi.votebot.command.context.Context
-import dev.schlaubi.votebot.command.context.response.respond
-import dev.schlaubi.votebot.util.Embeds
-
-object InfoCommand : SingleCommand() {
-    override val description: String = "Displays basic information about the bot"
-    override val name: String = "info"
-    override val useEphemeral: Boolean = true
-
-    override suspend fun execute(context: Context) {
-        context.respond(Embeds.info("Coming soon :tm:"))
-    }
+/**
+ * Useful collection of Discord emotes.
+ *
+ *
+ * Designed by [Rxsto#1337](https://rxsto.me)
+ * Bot needs to be on [https://discord.gg/8phqcej](https://discord.gg/8phqcej)
+ */
+@Suppress("KDocMissingDocumentation")
+object Emotes {
+    const val LOADING: String = "<a:loading:547513249835384833>"
+    const val ERROR: String = "<:error:535827110489620500>"
+    const val WARN: String = "<:warn:535832532365737987>"
+    const val INFO: String = "<:info:535828529573789696>"
+    const val SUCCESS: String = "<:success:535827110552666112>"
 }

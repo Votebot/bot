@@ -17,7 +17,7 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package dev.schlaubi.votebot.command.internal
+package dev.schlaubi.votebot.command.internal.errorhandling
 
 import dev.schlaubi.votebot.command.CommandErrorHandler
 import dev.schlaubi.votebot.command.context.Context

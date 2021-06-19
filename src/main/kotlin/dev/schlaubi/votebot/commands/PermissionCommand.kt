@@ -26,6 +26,7 @@ import dev.schlaubi.votebot.command.SubCommand
 import dev.schlaubi.votebot.command.context.Context
 import dev.schlaubi.votebot.command.context.response.respond
 import dev.schlaubi.votebot.config.Config
+import dev.schlaubi.votebot.util.Embeds
 import dev.schlaubi.votebot.util.addCommand
 import dev.schlaubi.votebot.util.appendPermission
 import dev.schlaubi.votebot.util.buildCommands
@@ -107,7 +108,7 @@ suspend fun doPermissions(
 
     val command = commands.firstOrNull { it.name == commandName }
     if (command == null) {
-        context.respond("Unknown command")
+        context.respond(Embeds.error("Unknown command"))
         return
     }
 
@@ -119,5 +120,5 @@ suspend fun doPermissions(
         addPermission(context.boolean("permission"))
     }
 
-    context.respond("Permission was updated!")
+    context.respond(Embeds.success("Permission was updated!"))
 }

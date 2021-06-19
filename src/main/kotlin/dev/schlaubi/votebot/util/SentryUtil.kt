@@ -1,5 +1,5 @@
 /*
- * VoteBot - A feature-rich bot to create votes on Discord guilds.
+ * Votebot - A feature-rich bot to create votes on Discord guilds.
  *
  * Copyright (C) 2019-2021  Michael Rittmeister & Yannick Seeger
  *
@@ -17,19 +17,19 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package dev.schlaubi.votebot.commands
+package dev.schlaubi.votebot.util
 
-import dev.schlaubi.votebot.command.SingleCommand
-import dev.schlaubi.votebot.command.context.Context
-import dev.schlaubi.votebot.command.context.response.respond
-import dev.schlaubi.votebot.util.Embeds
+import dev.schlaubi.votebot.config.Config
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
-object InfoCommand : SingleCommand() {
-    override val description: String = "Displays basic information about the bot"
-    override val name: String = "info"
-    override val useEphemeral: Boolean = true
-
-    override suspend fun execute(context: Context) {
-        context.respond(Embeds.info("Coming soon :tm:"))
+@OptIn(ExperimentalContracts::class)
+inline fun <T> whenUsingSentry(block: () -> T): T? {
+    contract {
+        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
     }
+    return if (Config.ENVIRONMENT.useSentry)
+        block()
+    else null
 }
