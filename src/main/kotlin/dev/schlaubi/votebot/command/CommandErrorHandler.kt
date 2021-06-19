@@ -1,5 +1,5 @@
 /*
- * Votebot - A feature-rich bot to create votes on Discord guilds.
+ * VoteBot - A feature-rich bot to create votes on Discord guilds.
  *
  * Copyright (C) 2019-2021  Michael Rittmeister & Yannick Seeger
  *

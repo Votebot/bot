@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="client-jslegacy-1.0-SNAPSHOT">
+    <output-path>D:\Users\micha\IdeaProjects\votebot\client\build\libs</output-path>
+    <root id="archive" name="client-jslegacy-1.0-SNAPSHOT.jar">
+      <element id="module-output" name="votebot.client.jsMain" />
+    </root>
+  </artifact>
+</component>
